@@ -40,7 +40,7 @@ export default function Home() {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-gray-200">
 
       {/* 헤더 */}
       <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
@@ -54,7 +54,7 @@ export default function Home() {
       </header>
 
       {/* 히어로 */}
-      <section className="bg-white px-6 py-12 text-center border-b border-gray-200">
+      <section className="bg-gray-50 px-6 py-12 text-center border-b border-gray-200">
         <p className="text-blue-800 font-semibold text-xs tracking-widest mb-2">2027학년도 디미고 입시</p>
         <h1 className="text-3xl font-black text-gray-900 leading-tight mb-3">
           합격을 위한 <span className="text-blue-800">단 하나의 선택</span>
