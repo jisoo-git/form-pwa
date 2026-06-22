@@ -3,12 +3,12 @@ import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: 'AIzaSyDDhhH_m7c0d4ZBwb18_fjQzBwFqQOb7N4',
+  authDomain: 'form-pwa-academy.firebaseapp.com',
+  projectId: 'form-pwa-academy',
+  storageBucket: 'form-pwa-academy.firebasestorage.app',
+  messagingSenderId: '892820925937',
+  appId: '1:892820925937:web:3d5320b8b19e75159e6850',
 }
 
 const app = initializeApp(firebaseConfig)
