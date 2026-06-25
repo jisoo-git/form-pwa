@@ -60,7 +60,7 @@ export default function Dashboard() {
           <p className="text-sm text-gray-600 font-medium">폼 {forms.length}개</p>
           <button
             onClick={() => setShowLanding(true)}
-            className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold border border-indigo-200 hover:border-indigo-400 rounded-lg px-2.5 py-1 transition-colors"
+            className="text-xs text-blue-600 hover:text-blue-800 font-semibold border border-blue-200 hover:border-blue-400 rounded-lg px-2.5 py-1 transition-colors"
           >
             🔗 홈 연결 설정
           </button>
@@ -93,7 +93,7 @@ export default function Dashboard() {
                     {form.type === 'enrollment' ? '수강신청' : '문제폼'} · 섹션 {form.sections?.length ?? 0}개
                   </p>
                   {(landingLinks.course1 === form.id || landingLinks.course2 === form.id) && (
-                    <p className="text-xs text-indigo-500 font-semibold mt-0.5">
+                    <p className="text-xs text-blue-600 font-semibold mt-0.5">
                       🔗 홈 {landingLinks.course1 === form.id ? '단기특강' : '일반전형'} 버튼 연결됨
                     </p>
                   )}

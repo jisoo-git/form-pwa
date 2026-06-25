@@ -19,6 +19,21 @@ const TYPE_OPTIONS: { value: QuestionType; label: string }[] = [
 
 const circled = (n: number) => ['①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩'][n - 1] ?? String(n)
 
+// ── 공통 inline style helpers ────────────────────────────────
+const inputBase: React.CSSProperties = {
+  width: '100%', border: '1px solid #c8d0dc', borderRadius: 8,
+  padding: '9px 12px', fontSize: 14, color: '#18181b',
+  background: '#fff', outline: 'none', boxSizing: 'border-box',
+  fontFamily: 'inherit',
+}
+
+const underlineInput: React.CSSProperties = {
+  width: '100%', border: 'none', borderBottom: '2px solid #c8d0dc',
+  outline: 'none', paddingBottom: 8, fontSize: 15, fontWeight: 600,
+  color: '#18181b', background: 'transparent', boxSizing: 'border-box',
+  fontFamily: 'inherit',
+}
+
 function AnswerArea({ question, onChange, sections, currentSectionId }: {
   question: Question
   onChange: (u: Partial<Question>) => void
@@ -70,45 +85,47 @@ function AnswerArea({ question, onChange, sections, currentSectionId }: {
 
   switch (question.type) {
     case 'short':
-      return <div className="mt-4 border-b-2 border-gray-300 text-sm text-gray-300 pb-1 w-1/2">단답형 답변</div>
+      return <div style={{ marginTop: 12, borderBottom: '2px solid #c8d0dc', fontSize: 13, color: '#d4d4d8', paddingBottom: 4, width: '50%' }}>단답형 답변</div>
 
     case 'long':
-      return <div className="mt-4 border-b-2 border-gray-300 text-sm text-gray-300 pb-8 w-4/5">장문형 답변</div>
+      return <div style={{ marginTop: 12, borderBottom: '2px solid #c8d0dc', fontSize: 13, color: '#d4d4d8', paddingBottom: 32, width: '80%' }}>장문형 답변</div>
 
     case 'date':
       return (
-        <div className="mt-4 flex items-center gap-2">
-          <div className="border-b-2 border-gray-300 text-sm text-gray-300 pb-1 w-36">날짜 선택</div>
+        <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ borderBottom: '2px solid #c8d0dc', fontSize: 13, color: '#d4d4d8', paddingBottom: 4, width: 120 }}>날짜 선택</div>
           <span>📅</span>
         </div>
       )
 
     case 'number':
-      return <div className="mt-4 border-b-2 border-gray-300 text-sm text-gray-300 pb-1 w-1/3">숫자 입력</div>
+      return <div style={{ marginTop: 12, borderBottom: '2px solid #c8d0dc', fontSize: 13, color: '#d4d4d8', paddingBottom: 4, width: '33%' }}>숫자 입력</div>
 
     case 'ox':
       return (
-        <div className="mt-4 space-y-2">
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 6 }}>
           {['O', 'X'].map(v => (
             <div key={v}>
-              <div className="flex items-center gap-3 py-1 px-2 rounded-lg hover:bg-gray-50 cursor-default">
-                <div className="w-4 h-4 rounded-full border-2 border-gray-400 shrink-0" />
-                <span className="text-sm text-gray-600">{v}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 8px', borderRadius: 8 }}>
+                <div style={{ width: 16, height: 16, borderRadius: '50%', border: '2px solid #d4d4d8', flexShrink: 0 }} />
+                <span style={{ fontSize: 14, color: '#52525b' }}>{v}</span>
               </div>
-              <div className="flex items-center gap-1.5 ml-9 mt-0.5">
-                <span className="text-xs text-gray-300">↳</span>
-                <select
-                  value={question.branching?.[v] ?? ''}
-                  onChange={e => setBranch(v, e.target.value)}
-                  className="text-xs text-gray-400 hover:text-gray-600 border-none outline-none bg-transparent cursor-pointer transition-colors"
-                >
-                  <option value="">다음 섹션으로 이동</option>
-                  {otherSections.map(s => (
-                    <option key={s.id} value={s.id}>{s.title || '(제목 없음)'}</option>
-                  ))}
-                  <option value="__end__">⛔ 진행 불가</option>
-                </select>
-              </div>
+              {otherSections.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 34, marginTop: 2 }}>
+                  <span style={{ fontSize: 11, color: '#d4d4d8' }}>↳</span>
+                  <select
+                    value={question.branching?.[v] ?? ''}
+                    onChange={e => setBranch(v, e.target.value)}
+                    style={{ fontSize: 11, color: '#8c959f', border: 'none', outline: 'none', background: 'transparent', cursor: 'pointer' }}
+                  >
+                    <option value="">다음 섹션으로 이동</option>
+                    {otherSections.map(s => (
+                      <option key={s.id} value={s.id}>{s.title || '(제목 없음)'}</option>
+                    ))}
+                    <option value="__end__">⛔ 진행 불가</option>
+                  </select>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -116,29 +133,37 @@ function AnswerArea({ question, onChange, sections, currentSectionId }: {
 
     case 'info':
       return (
-        <div className="mt-4 space-y-3">
-          <div className="group">
-            <label className="text-xs text-gray-400">URL <span className="text-gray-300">(없으면 일반 텍스트로 표시)</span></label>
-            <div className="flex items-end gap-2 mt-1">
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div>
+            <div style={{ fontSize: 11, color: '#8c959f', fontWeight: 600, marginBottom: 6 }}>URL <span style={{ color: '#d4d4d8' }}>(없으면 일반 텍스트로 표시)</span></div>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <input
                 value={question.linkUrl ?? ''}
                 onChange={e => onChange({ linkUrl: e.target.value })}
                 placeholder="https://... 또는 PDF 업로드"
-                className="flex-1 border-b-2 border-gray-200 hover:border-gray-400 focus:border-blue-500 outline-none text-sm text-gray-500 pb-1 bg-transparent transition-colors"
+                style={{ ...inputBase, flex: 1 }}
+                onFocus={e => { e.target.style.borderColor = '#2563eb' }}
+                onBlur={e => { e.target.style.borderColor = '#c8d0dc' }}
               />
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                className="shrink-0 text-xs text-blue-500 hover:text-blue-700 border border-blue-200 hover:border-blue-400 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50 whitespace-nowrap"
+                style={{
+                  flexShrink: 0, fontSize: 12, fontWeight: 600,
+                  color: '#1d4ed8', border: '1px solid #93c5fd',
+                  borderRadius: 8, padding: '8px 12px', background: '#dbeafe',
+                  cursor: uploading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap',
+                  opacity: uploading ? 0.6 : 1,
+                }}
               >
                 {uploading ? '업로드 중...' : 'PDF 업로드'}
               </button>
-              <input ref={fileInputRef} type="file" accept=".pdf" className="hidden" onChange={handleFileChange} />
+              <input ref={fileInputRef} type="file" accept=".pdf" style={{ display: 'none' }} onChange={handleFileChange} />
             </div>
             {question.linkUrl && (
               <a href={question.linkUrl} target="_blank" rel="noopener noreferrer"
-                className="inline-block mt-1.5 text-xs text-blue-400 hover:text-blue-600 truncate max-w-full">
+                style={{ display: 'inline-block', marginTop: 6, fontSize: 11, color: '#2563eb', textDecoration: 'none', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 🔗 {question.linkUrl}
               </a>
             )}
@@ -149,26 +174,25 @@ function AnswerArea({ question, onChange, sections, currentSectionId }: {
     case 'omr': {
       const count = question.omrCount ?? 5
       return (
-        <div className="mt-4 space-y-3">
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-400">선택지 수</span>
-            <div className="flex items-center gap-1">
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 12, color: '#8c959f' }}>선택지 수</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
               <button
                 onClick={() => onChange({ omrCount: Math.max(2, count - 1) })}
-                className="w-7 h-7 rounded border border-gray-300 hover:border-gray-400 text-gray-500 hover:text-gray-700 transition-colors text-sm"
+                style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #c8d0dc', background: '#fff', color: '#52525b', fontSize: 13, cursor: 'pointer' }}
               >−</button>
-              <span className="w-8 text-center text-sm font-medium text-gray-700">{count}</span>
+              <span style={{ width: 32, textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#18181b' }}>{count}</span>
               <button
                 onClick={() => onChange({ omrCount: Math.min(10, count + 1) })}
-                className="w-7 h-7 rounded border border-gray-300 hover:border-gray-400 text-gray-500 hover:text-gray-700 transition-colors text-sm"
+                style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #c8d0dc', background: '#fff', color: '#52525b', fontSize: 13, cursor: 'pointer' }}
               >+</button>
             </div>
-            <span className="text-xs text-gray-400">개</span>
+            <span style={{ fontSize: 12, color: '#8c959f' }}>개</span>
           </div>
-          <div className="flex gap-2 flex-wrap">
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {Array.from({ length: count }, (_, i) => i + 1).map(n => (
-              <div key={n}
-                className="w-9 h-9 rounded-full border-2 border-gray-300 flex items-center justify-center text-sm font-bold text-gray-500">
+              <div key={n} style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid #d4d4d8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#71717a' }}>
                 {circled(n)}
               </div>
             ))}
@@ -181,33 +205,41 @@ function AnswerArea({ question, onChange, sections, currentSectionId }: {
     case 'checkbox':
     case 'dropdown':
       return (
-        <div className="mt-4 space-y-1">
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 4 }}>
           {(question.options ?? []).map((opt, i) => (
-            <div key={i} className="group">
-              <div className="flex items-center gap-3 py-1.5 px-2 rounded-lg hover:bg-gray-50 transition-colors">
+            <div key={i}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 8px', borderRadius: 8 }}>
                 {question.type === 'checkbox'
-                  ? <div className="w-4 h-4 rounded border-2 border-gray-400 shrink-0" />
+                  ? <div style={{ width: 16, height: 16, borderRadius: 4, border: '2px solid #d4d4d8', flexShrink: 0 }} />
                   : question.type === 'dropdown'
-                  ? <span className="text-gray-400 text-sm w-4 shrink-0 text-center">{i + 1}.</span>
-                  : <div className="w-4 h-4 rounded-full border-2 border-gray-400 shrink-0" />
+                  ? <span style={{ fontSize: 13, color: '#8c959f', width: 18, flexShrink: 0, textAlign: 'center' }}>{i + 1}.</span>
+                  : <div style={{ width: 16, height: 16, borderRadius: '50%', border: '2px solid #d4d4d8', flexShrink: 0 }} />
                 }
                 <input
                   value={opt}
                   onChange={e => updateOption(i, e.target.value)}
-                  className="flex-1 border-b border-transparent hover:border-gray-300 focus:border-blue-500 outline-none text-sm text-gray-700 pb-0.5 bg-transparent transition-colors"
+                  style={{
+                    flex: 1, border: 'none', borderBottom: '1px solid transparent',
+                    outline: 'none', fontSize: 14, color: '#3f3f46', paddingBottom: 2,
+                    background: 'transparent', fontFamily: 'inherit',
+                  }}
+                  onFocus={e => { e.target.style.borderBottomColor = '#2563eb' }}
+                  onBlur={e => { e.target.style.borderBottomColor = 'transparent' }}
                 />
                 <button
                   onClick={() => removeOption(i)}
-                  className="text-gray-300 hover:text-red-400 text-xl leading-none transition-colors"
+                  style={{ background: 'none', border: 'none', color: '#d4d4d8', fontSize: 18, lineHeight: 1, cursor: 'pointer', padding: 0, flexShrink: 0 }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#ef4444' }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#d4d4d8' }}
                 >×</button>
               </div>
-              {['radio', 'dropdown'].includes(question.type) && (
-                <div className="flex items-center gap-1.5 ml-9 mt-0.5">
-                  <span className="text-xs text-gray-300">↳</span>
+              {['radio', 'dropdown'].includes(question.type) && otherSections.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 34, marginTop: 2 }}>
+                  <span style={{ fontSize: 11, color: '#d4d4d8' }}>↳</span>
                   <select
                     value={question.branching?.[opt] ?? ''}
                     onChange={e => setBranch(opt, e.target.value)}
-                    className="text-xs text-gray-400 hover:text-gray-600 border-none outline-none bg-transparent cursor-pointer transition-colors"
+                    style={{ fontSize: 11, color: '#8c959f', border: 'none', outline: 'none', background: 'transparent', cursor: 'pointer' }}
                   >
                     <option value="">다음 섹션으로 이동</option>
                     {otherSections.map(s => (
@@ -221,13 +253,21 @@ function AnswerArea({ question, onChange, sections, currentSectionId }: {
           ))}
           <button
             onClick={addOption}
-            className="flex items-center gap-3 py-1.5 px-2 rounded-lg text-sm text-gray-400 hover:text-blue-500 hover:bg-gray-50 w-full text-left transition-colors"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              padding: '6px 8px', borderRadius: 8,
+              background: 'none', border: 'none',
+              fontSize: 13, color: '#8c959f', cursor: 'pointer',
+              textAlign: 'left', fontFamily: 'inherit',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#2563eb' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#8c959f' }}
           >
             {question.type === 'checkbox'
-              ? <div className="w-4 h-4 rounded border-2 border-gray-300 shrink-0" />
+              ? <div style={{ width: 16, height: 16, borderRadius: 4, border: '2px solid #c8d0dc', flexShrink: 0 }} />
               : question.type === 'dropdown'
-              ? <span className="text-gray-300 text-sm w-4 shrink-0 text-center">{(question.options?.length ?? 0) + 1}.</span>
-              : <div className="w-4 h-4 rounded-full border-2 border-gray-300 shrink-0" />
+              ? <span style={{ fontSize: 13, color: '#d4d4d8', width: 18, flexShrink: 0, textAlign: 'center' }}>{(question.options?.length ?? 0) + 1}.</span>
+              : <div style={{ width: 16, height: 16, borderRadius: '50%', border: '2px solid #c8d0dc', flexShrink: 0 }} />
             }
             선택지 추가
           </button>
@@ -256,92 +296,113 @@ export default function SortableQuestion({ question, isExpanded, sectionId, sect
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className={`bg-white rounded-lg border-2 transition-all ${isExpanded ? 'border-blue-500 shadow-sm' : 'border-gray-200 hover:border-gray-300 cursor-pointer'}`}
+      style={{
+        ...style,
+        background: '#fff',
+        border: isExpanded ? '2px solid #2563eb' : '1px solid #c8d0dc',
+        borderRadius: 10,
+        transition: 'border-color 0.15s',
+      }}
     >
-      {/* ── 접힌 상태 ─────────────────────────────── */}
+      {/* ── 접힌 상태 ────────────────────────────── */}
       {!isExpanded && (
-        <div className="flex items-center gap-2 px-3 py-3" onClick={onToggle}>
-          <button {...attributes} {...listeners} onClick={e => e.stopPropagation()}
-            className="text-gray-300 hover:text-gray-500 cursor-grab touch-none transition-colors">⠿</button>
-          <p className="flex-1 text-sm text-gray-700 truncate">
-            {question.label || <span className="text-gray-300 italic">질문 내용 없음</span>}
+        <div
+          style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 14px', cursor: 'pointer' }}
+          onClick={onToggle}
+        >
+          <button
+            {...attributes} {...listeners}
+            onClick={e => e.stopPropagation()}
+            style={{ background: 'none', border: 'none', color: '#d4d4d8', cursor: 'grab', fontSize: 16, padding: 0, touchAction: 'none', lineHeight: 1 }}
+          >⠿</button>
+          <p style={{ flex: 1, fontSize: 14, color: question.label ? '#3f3f46' : '#d4d4d8', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontStyle: question.label ? 'normal' : 'italic' }}>
+            {question.label || '질문 내용 없음'}
           </p>
-          <span className="text-xs text-gray-400 shrink-0">{TYPE_OPTIONS.find(t => t.value === question.type)?.label}</span>
-          {question.required && <span className="text-red-400 text-xs font-bold shrink-0">*</span>}
+          <span style={{ fontSize: 11, color: '#8c959f', flexShrink: 0 }}>{TYPE_OPTIONS.find(t => t.value === question.type)?.label}</span>
+          {question.required && <span style={{ fontSize: 11, color: '#ef4444', fontWeight: 700, flexShrink: 0 }}>*</span>}
           <button
             onClick={e => { e.stopPropagation(); onDelete() }}
-            className="text-gray-300 hover:text-red-400 text-xl leading-none ml-1 transition-colors"
+            style={{ background: '#fff', border: '1px solid #fee2e2', color: '#ef4444', fontSize: 13, padding: '3px 8px', borderRadius: 6, cursor: 'pointer', flexShrink: 0, fontWeight: 700 }}
           >×</button>
         </div>
       )}
 
-      {/* ── 펼친 상태 ─────────────────────────────── */}
+      {/* ── 펼친 상태 ────────────────────────────── */}
       {isExpanded && (
         <div>
-          {/* 상단: 드래그 + 삭제 */}
-          <div className="flex items-center justify-between px-5 pt-4">
-            <button {...attributes} {...listeners}
-              className="text-gray-300 hover:text-gray-500 cursor-grab touch-none transition-colors">⠿</button>
-            <button onClick={onDelete}
-              className="text-gray-300 hover:text-red-400 text-xl leading-none transition-colors">×</button>
+          {/* 드래그 + 닫기 */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px 4px' }}>
+            <button
+              {...attributes} {...listeners}
+              style={{ background: 'none', border: 'none', color: '#d4d4d8', cursor: 'grab', fontSize: 16, padding: 0, touchAction: 'none', lineHeight: 1 }}
+            >⠿</button>
+            <button
+              onClick={onDelete}
+              style={{ background: '#fff', border: '1px solid #fee2e2', color: '#ef4444', fontSize: 13, padding: '5px 10px', borderRadius: 7, cursor: 'pointer', fontWeight: 700 }}
+            >삭제</button>
           </div>
 
           {/* 질문 입력 */}
-          <div className="px-5 mt-3">
+          <div style={{ padding: '4px 16px' }}>
             <input
               value={question.label}
               onChange={e => onChange({ label: e.target.value })}
               placeholder={question.type === 'info' ? 'PDF 제목 (선택)' : '질문'}
-              className="w-full text-base font-medium text-gray-800 border-b-2 border-gray-200 hover:border-gray-400 focus:border-blue-500 outline-none pb-2 bg-transparent transition-colors"
+              style={underlineInput}
               autoFocus
+              onFocus={e => { e.target.style.borderBottomColor = '#2563eb' }}
+              onBlur={e => { e.target.style.borderBottomColor = '#c8d0dc' }}
             />
           </div>
 
           {/* 답변 영역 */}
-          <div className="px-5">
+          <div style={{ padding: '0 16px' }}>
             <AnswerArea question={question} onChange={onChange} sections={sections} currentSectionId={sectionId} />
           </div>
 
-          {/* ── 구분선 1: 정답 + 배점 (항상 고정) ── */}
+          {/* ── 채점 (info 제외) ── */}
           {question.type !== 'info' && (
             <>
-              <div className="border-t border-gray-100 mt-5 mx-5" />
-              <div className={`px-5 py-3 ${question.type === 'long' ? 'flex flex-col gap-3' : 'flex items-center gap-6'}`}>
-                <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <span className="text-xs text-gray-400 shrink-0">정답</span>
+              <div style={{ borderTop: '1px solid #f4f4f6', margin: '14px 16px 0' }} />
+              <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 11, color: '#8c959f', fontWeight: 600, marginBottom: 6 }}>정답</div>
                   {question.type === 'omr' ? (
-                    <div className="flex gap-1.5 flex-wrap">
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                       {Array.from({ length: question.omrCount ?? 5 }, (_, i) => i + 1).map(n => (
-                        <button key={n}
+                        <button
+                          key={n}
                           onClick={() => onChange({ correctAnswer: question.correctAnswer === String(n) ? undefined : String(n) })}
-                          className={`w-8 h-8 rounded-full border-2 text-sm font-bold transition-colors
-                            ${question.correctAnswer === String(n)
-                              ? 'border-blue-500 bg-blue-500 text-white'
-                              : 'border-gray-300 text-gray-500 hover:border-blue-300 hover:text-blue-500'}`}
+                          style={{
+                            width: 32, height: 32, borderRadius: '50%',
+                            border: question.correctAnswer === String(n) ? '2px solid #2563eb' : '2px solid #d4d4d8',
+                            background: question.correctAnswer === String(n) ? '#2563eb' : '#fff',
+                            color: question.correctAnswer === String(n) ? '#fff' : '#52525b',
+                            fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                          }}
                         >{circled(n)}</button>
                       ))}
                     </div>
                   ) : question.type === 'ox' ? (
-                    <div className="flex gap-3">
+                    <div style={{ display: 'flex', gap: 12 }}>
                       {['O', 'X'].map(v => (
-                        <label key={v} className="flex items-center gap-1 text-xs text-gray-600 cursor-pointer hover:text-blue-500 transition-colors">
+                        <label key={v} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#52525b', cursor: 'pointer' }}>
                           <input type="radio" name={`ox-${question.id}`}
                             checked={question.correctAnswer === v}
                             onChange={() => onChange({ correctAnswer: v })}
-                            className="accent-blue-500 cursor-pointer" />
+                            style={{ accentColor: '#2563eb', cursor: 'pointer' }} />
                           {v}
                         </label>
                       ))}
                       {question.correctAnswer && (
                         <button onClick={() => onChange({ correctAnswer: undefined })}
-                          className="text-xs text-gray-300 hover:text-gray-500 transition-colors">지우기</button>
+                          style={{ background: 'none', border: 'none', fontSize: 11, color: '#d4d4d8', cursor: 'pointer' }}>지우기</button>
                       )}
                     </div>
                   ) : question.type === 'checkbox' ? (
-                    <div className="flex flex-wrap gap-2">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                       {(question.options ?? []).map(opt => (
-                        <label key={opt} className="flex items-center gap-1 text-xs text-gray-600 cursor-pointer hover:text-blue-500 transition-colors">
+                        <label key={opt} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#52525b', cursor: 'pointer' }}>
                           <input type="checkbox"
                             checked={Array.isArray(question.correctAnswer) && question.correctAnswer.includes(opt)}
                             onChange={e => {
@@ -349,7 +410,7 @@ export default function SortableQuestion({ question, isExpanded, sectionId, sect
                               const next = e.target.checked ? [...prev, opt] : prev.filter(v => v !== opt)
                               onChange({ correctAnswer: next.length ? next : undefined })
                             }}
-                            className="accent-blue-500 cursor-pointer" />
+                            style={{ accentColor: '#2563eb', cursor: 'pointer' }} />
                           {opt}
                         </label>
                       ))}
@@ -358,7 +419,7 @@ export default function SortableQuestion({ question, isExpanded, sectionId, sect
                     <select
                       value={typeof question.correctAnswer === 'string' ? question.correctAnswer : ''}
                       onChange={e => onChange({ correctAnswer: e.target.value || undefined })}
-                      className="text-xs text-gray-600 border border-gray-200 rounded px-2 py-1 bg-white hover:border-gray-400 focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
+                      style={{ fontSize: 13, color: '#52525b', border: '1px solid #c8d0dc', borderRadius: 6, padding: '5px 10px', background: '#fff', outline: 'none' }}
                     >
                       <option value="">없음</option>
                       {(question.options ?? []).map(o => <option key={o} value={o}>{o}</option>)}
@@ -369,14 +430,18 @@ export default function SortableQuestion({ question, isExpanded, sectionId, sect
                       onChange={e => onChange({ correctAnswer: e.target.value || undefined })}
                       placeholder="모범 답안 입력 (없으면 비워두세요)"
                       rows={3}
-                      className="flex-1 text-xs text-gray-600 border border-gray-200 hover:border-gray-400 focus:border-blue-500 outline-none rounded-lg p-2 bg-white transition-colors resize-none"
+                      style={{ width: '100%', fontSize: 13, color: '#52525b', border: '1px solid #c8d0dc', borderRadius: 8, padding: '8px 10px', background: '#fff', outline: 'none', resize: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                      onFocus={e => { e.target.style.borderColor = '#2563eb' }}
+                      onBlur={e => { e.target.style.borderColor = '#c8d0dc' }}
                     />
                   ) : question.type === 'date' ? (
                     <input
                       type="date"
                       value={typeof question.correctAnswer === 'string' ? question.correctAnswer : ''}
                       onChange={e => onChange({ correctAnswer: e.target.value || undefined })}
-                      className="text-xs text-gray-600 border border-gray-200 hover:border-gray-400 focus:border-blue-500 outline-none rounded-lg px-2 py-1 bg-white transition-colors cursor-pointer"
+                      style={{ fontSize: 13, color: '#52525b', border: '1px solid #c8d0dc', borderRadius: 6, padding: '5px 10px', background: '#fff', outline: 'none' }}
+                      onFocus={e => { e.target.style.borderColor = '#2563eb' }}
+                      onBlur={e => { e.target.style.borderColor = '#c8d0dc' }}
                     />
                   ) : question.type === 'number' ? (
                     <input
@@ -384,35 +449,39 @@ export default function SortableQuestion({ question, isExpanded, sectionId, sect
                       value={typeof question.correctAnswer === 'string' ? question.correctAnswer : ''}
                       onChange={e => onChange({ correctAnswer: e.target.value || undefined })}
                       placeholder="정답 숫자"
-                      className="text-xs text-gray-600 border-b border-gray-200 hover:border-gray-400 focus:border-blue-500 outline-none bg-transparent transition-colors pb-0.5 w-24"
+                      style={{ fontSize: 13, color: '#52525b', border: 'none', borderBottom: '1px solid #c8d0dc', outline: 'none', background: 'transparent', width: 80, paddingBottom: 4 }}
                     />
                   ) : (
                     <input
                       value={typeof question.correctAnswer === 'string' ? question.correctAnswer : ''}
                       onChange={e => onChange({ correctAnswer: e.target.value || undefined })}
                       placeholder="없음"
-                      className="flex-1 text-xs text-gray-600 border-b border-gray-200 hover:border-gray-400 focus:border-blue-500 outline-none bg-transparent transition-colors pb-0.5"
+                      style={{ fontSize: 13, color: '#52525b', border: 'none', borderBottom: '1px solid #c8d0dc', outline: 'none', background: 'transparent', width: '100%', paddingBottom: 4, boxSizing: 'border-box', fontFamily: 'inherit' }}
                     />
                   )}
                 </div>
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <span className="text-xs text-gray-400">배점</span>
-                  <input
-                    type="number" min={0}
-                    value={question.points ?? ''}
-                    onChange={e => onChange({ points: e.target.value ? Number(e.target.value) : undefined })}
-                    placeholder="—"
-                    className="text-xs text-gray-600 border border-gray-200 rounded px-2 py-1 w-14 text-center hover:border-gray-400 focus:outline-none focus:border-blue-500 transition-colors bg-white"
-                  />
-                  <span className="text-xs text-gray-400">점</span>
+                <div style={{ flexShrink: 0 }}>
+                  <div style={{ fontSize: 11, color: '#8c959f', fontWeight: 600, marginBottom: 6 }}>배점</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <input
+                      type="number" min={0}
+                      value={question.points ?? ''}
+                      onChange={e => onChange({ points: e.target.value ? Number(e.target.value) : undefined })}
+                      placeholder="—"
+                      style={{ width: 52, fontSize: 13, color: '#3f3f46', border: '1px solid #c8d0dc', borderRadius: 6, padding: '5px 8px', textAlign: 'center', background: '#fff', outline: 'none' }}
+                      onFocus={e => { e.target.style.borderColor = '#2563eb' }}
+                      onBlur={e => { e.target.style.borderColor = '#c8d0dc' }}
+                    />
+                    <span style={{ fontSize: 12, color: '#8c959f' }}>점</span>
+                  </div>
                 </div>
               </div>
             </>
           )}
 
-          {/* ── 구분선 2: 유형 + 필수 (항상 고정) ── */}
-          <div className="border-t border-gray-100 mx-5" />
-          <div className="px-5 py-3 flex items-center justify-between">
+          {/* ── 유형 + 필수 ── */}
+          <div style={{ borderTop: '1px solid #f4f4f6', margin: '0 16px' }} />
+          <div style={{ padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <select
               value={question.type}
               onChange={e => onChange({
@@ -421,7 +490,7 @@ export default function SortableQuestion({ question, isExpanded, sectionId, sect
                 correctAnswer: undefined,
                 branching: undefined,
               })}
-              className="text-sm text-gray-600 border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:border-gray-400 focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
+              style={{ fontSize: 13, color: '#52525b', border: '1px solid #c8d0dc', borderRadius: 8, padding: '6px 10px', background: '#fff', outline: 'none', cursor: 'pointer' }}
             >
               {TYPE_OPTIONS.map(({ value, label }) => (
                 <option key={value} value={value}>{label}</option>
@@ -429,13 +498,21 @@ export default function SortableQuestion({ question, isExpanded, sectionId, sect
             </select>
 
             {question.type !== 'info' && (
-              <label className="flex items-center gap-2 cursor-pointer select-none group">
-                <span className="text-sm text-gray-500 group-hover:text-gray-700 transition-colors">필수</span>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', userSelect: 'none' }}>
+                <span style={{ fontSize: 13, color: question.required ? '#ef4444' : '#8c959f' }}>필수</span>
                 <div
                   onClick={() => onChange({ required: !question.required })}
-                  className={`w-10 h-5 rounded-full transition-colors relative ${question.required ? 'bg-blue-500' : 'bg-gray-200 hover:bg-gray-300'}`}
+                  style={{
+                    position: 'relative', width: 40, height: 22, borderRadius: 999,
+                    background: question.required ? '#ef4444' : '#d4d4d8',
+                    transition: 'background 0.2s', cursor: 'pointer',
+                  }}
                 >
-                  <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${question.required ? 'translate-x-5' : 'translate-x-0'}`} />
+                  <div style={{
+                    position: 'absolute', top: 3, width: 16, height: 16, borderRadius: '50%',
+                    background: '#fff', transition: 'left 0.2s',
+                    left: question.required ? 21 : 3,
+                  }} />
                 </div>
               </label>
             )}

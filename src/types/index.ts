@@ -44,6 +44,27 @@ export interface Form {
   sections: Section[]
 }
 
+export interface ContentBlock {
+  type: 'text' | 'image'
+  text?: string
+  url?: string
+  caption?: string
+}
+
+export interface Post {
+  id: string
+  tag: string
+  title: string
+  date: string
+  read: string
+  excerpt: string
+  coverImage: string
+  content: ContentBlock[]
+  pinned?: boolean
+  views?: number
+  published?: boolean
+}
+
 export interface Response {
   id?: string
   formId: string
