@@ -269,25 +269,38 @@ export default function AdminSubmissions() {
 
               {/* 상세 정보 */}
               {selected.detail && Object.keys(selected.detail).length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 0, marginBottom: 20, border: '1px solid #c8d0dc', borderRadius: 12, overflow: 'hidden' }}>
-                  {Object.entries(selected.detail).map(([key, val], i, arr) => {
-                    const label = labelMap[key] ?? key
-                    return (
-                      <div
-                        key={key}
-                        style={{
-                          display: 'flex',
-                          padding: '12px 16px',
-                          borderBottom: i < arr.length - 1 ? '1px solid #f4f4f6' : 'none',
+                <div style={{ marginBottom: 20, border: '1px solid #c8d0dc', borderRadius: 12, overflow: 'hidden' }}>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto 1fr',
+                  }}>
+                    {Object.entries(selected.detail).map(([key, val], i) => {
+                      const label = labelMap[key] ?? key
+                      const isLast = i === Object.keys(selected.detail).length - 1
+                      const cellBorder = isLast ? 'none' : '1px solid #f0f0f2'
+                      return [
+                        <div key={`${key}-label`} style={{
+                          padding: '11px 14px',
+                          fontSize: 12,
+                          fontWeight: 700,
+                          color: '#71717a',
+                          background: '#f8f9fa',
+                          borderBottom: cellBorder,
+                          borderRight: '1px solid #e8eaed',
+                          whiteSpace: 'nowrap',
+                        }}>{label}</div>,
+                        <div key={`${key}-val`} style={{
+                          padding: '11px 14px',
+                          fontSize: 13,
+                          fontWeight: 600,
+                          color: '#18181b',
                           background: '#fff',
-                          gap: 12,
-                        }}
-                      >
-                        <div style={{ minWidth: 130, fontSize: 13, color: '#71717a', fontWeight: 600, flexShrink: 0 }}>{label}</div>
-                        <div style={{ fontSize: 13, color: '#18181b', fontWeight: 500, wordBreak: 'break-all' }}>{String(val)}</div>
-                      </div>
-                    )
-                  })}
+                          borderBottom: cellBorder,
+                          wordBreak: 'break-all',
+                        }}>{String(val)}</div>,
+                      ]
+                    })}
+                  </div>
                 </div>
               )}
               {(!selected.detail || Object.keys(selected.detail).length === 0) && (
