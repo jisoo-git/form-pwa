@@ -223,7 +223,7 @@ export default function Home() {
             <div style={{ fontSize: 14, color: '#71717a', marginTop: 10 }}>디미고 입시, 혼자 준비하기엔 너무 많은 것이 걸려 있습니다.</div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4" style={{ gridAutoRows: '1fr' }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4" style={{ alignItems: 'stretch' }}>
             {WHY_CARDS.map(card => (
               <div
                 key={card.num}
@@ -259,11 +259,11 @@ export default function Home() {
 
                 {/* 태그 or 하이라이트 */}
                 {card.tags.length > 0 && (
-                  <div style={{ display: 'flex', flexWrap: 'nowrap', gap: 4, paddingTop: 16, borderTop: '1px solid #ececef', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', flexWrap: 'nowrap', gap: 4, paddingTop: 16, borderTop: '1px solid #ececef' }}>
                     {card.tags.map(tag => (
                       <span
                         key={tag}
-                        style={{ background: '#f4f4f6', borderRadius: 6, padding: '4px 7px', fontSize: 11, fontWeight: 600, color: '#52525b', whiteSpace: 'nowrap' }}
+                        style={{ background: '#f4f4f6', borderRadius: 6, padding: '3px 6px', fontSize: 10.5, fontWeight: 600, color: '#52525b', whiteSpace: 'nowrap', flexShrink: 1, minWidth: 0 }}
                       >
                         {tag}
                       </span>
