@@ -19,6 +19,9 @@
 - **호스팅**: Vercel
 - **방식**: GitHub `main` 브랜치에 push → Vercel 자동 배포 (별도 명령어 불필요)
 - **Firebase**: Firestore Rules 변경 시에만 `firebase deploy --only firestore:rules` 별도 실행 필요
+- **GitHub 레포**: `https://github.com/jisoo-git/encodingplus`
+- **로컬 경로**: `/Users/leejisoo/folder/encodingplus`
+- **GitHub 인증**: macOS 키체인 (`security find-internet-password -s github.com -w`) → GitHub REST API 직접 호출 가능
 
 ---
 

@@ -1,4 +1,4 @@
-# 인코딩플러스 작업 현황 (2026-06-27 v2)
+# 인코딩플러스 작업 현황 (2026-06-27 v3)
 
 ---
 
@@ -86,10 +86,28 @@
 - [x] isActive: true로 생성 → 수강신청 페이지 즉시 활성화
 
 ### Courses.tsx
-- [x] 페이지 헤더 부제 "2027학년도 디미고 입시 대비 정규 과정입니다." 삭제
-- [x] 섹션 헤더 desc "한국디지털미디어고등학교 입시 대비 정규 과정" 삭제 (개강일 뱃지 유지)
-- [x] SectionHeader: desc 비어있으면 렌더링 안 함 (조건부 처리)
+- [x] 페이지 헤더 부제 삭제, 전형 안내 블록·섹션 헤더 제거
+- [x] 바텀시트 제거 → CourseFullCard (상세 설명·수업구성·수업시간·수강료·CTA 전면 표시)
+- [x] 상세 단락 `p` → `div` (브라우저 기본 margin 제거)
 - [x] Home COURSE 02: "인성 면접 대비" → "인성면접 강화"
+
+### Home.tsx
+- [x] WHY 섹션 배포 환경 수정: `gridAutoRows` 제거 → `alignItems: stretch`
+- [x] WHY 태그: `overflow: hidden` 제거 + `flexShrink` + 파란색 (#dbeafe / #1d4ed8) + 크기 확대
+- [x] 수업 상세 버튼: 텍스트 링크 → `#2563eb` CTA 버튼 스타일
+
+### Apply.tsx
+- [x] `detail` 저장 형식 변경: `{questionId: value}` → `{질문레이블: value}`
+
+### AdminSubmissions
+- [x] forms 컬렉션 조회 → questionId:label 매핑 빌드 (기존 UUID 키 데이터 처리)
+- [x] detail 표시: UUID/랜덤ID 키 → labelMap 통해 한국어 레이블로 치환
+- [x] 상세 응답 그리드 레이아웃: `grid-template-columns: auto 1fr` (레이블 배경 #f8f9fa 구분)
+
+### 프로젝트 이름 변경
+- [x] GitHub 레포: `form-pwa` → `encodingplus` (macOS 키체인 토큰 + GitHub API로 직접 변경)
+- [x] 로컬 폴더: `/folder/form-pwa` → `/folder/encodingplus`
+- [x] git remote URL: `https://github.com/jisoo-git/encodingplus.git`
 
 ---
 
@@ -104,12 +122,15 @@
 
 ### 디자인 점검 필요
 - [ ] BlogPost 상세 페이지
-- [x] Courses 수업 소개 페이지 (헤더 정리 완료)
+- [x] Courses 수업 소개 페이지 (바텀시트 제거, 전면 표시 완료)
 - [ ] Apply 수강신청 페이지
 
 ---
 
 ## 참고
 - 디자인 가이드: `plan/DESIGN.md`
+- 로컬 경로: `/Users/leejisoo/folder/encodingplus`
+- GitHub: `https://github.com/jisoo-git/encodingplus`
 - Firebase 설정: `src/firebase/config.ts` (하드코딩)
 - Firestore 규칙: `firestore.rules` (전체 허용)
+- Firestore 폼 재생성 스크립트: `scripts/resetEnrollmentForm.mjs`
