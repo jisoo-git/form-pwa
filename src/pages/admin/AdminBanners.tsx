@@ -16,7 +16,7 @@ interface Banner {
   order: number
 }
 
-const EMPTY_FORM = { badge: '', title: '', sub: '', bg: 'linear-gradient(135deg, #002B5C 0%, #2563eb 100%)', cta: '자세히 보기', link: '/apply' }
+const EMPTY_FORM = { badge: '', title: '', sub: '', bg: 'linear-gradient(135deg, #002B5C 0%, #2563eb 100%)', cta: '수강 신청하기', link: '/apply' }
 const BG_PRESETS = [
   { color: 'linear-gradient(135deg, #002B5C 0%, #2563eb 100%)', label: '진파랑' },
   { color: 'linear-gradient(135deg, #001233 0%, #003580 100%)', label: '네이비' },
@@ -27,9 +27,9 @@ const BG_PRESETS = [
   { color: 'linear-gradient(135deg, #18181b 0%, #374151 100%)', label: '다크' },
 ]
 const LINK_OPTIONS = [
-  { value: '/apply', label: '수강 신청 (/apply)' },
-  { value: '/courses', label: '수업 소개 (/courses)' },
-  { value: '/blog', label: '블로그 (/blog)' },
+  { value: '/apply', label: '수강 신청 (/apply)', cta: '수강 신청하기' },
+  { value: '/courses', label: '수업 소개 (/courses)', cta: '수업 보기' },
+  { value: '/blog', label: '블로그 (/blog)', cta: '블로그 보기' },
 ]
 
 export default function AdminBanners() {
@@ -362,7 +362,7 @@ export default function AdminBanners() {
                       <button
                         key={opt.value}
                         type="button"
-                        onClick={() => setForm(f => ({ ...f, link: opt.value }))}
+                        onClick={() => setForm(f => ({ ...f, link: opt.value, cta: opt.cta }))}
                         style={{
                           display: 'flex', alignItems: 'center', gap: 12,
                           padding: '12px 14px', borderRadius: 10, textAlign: 'left',
