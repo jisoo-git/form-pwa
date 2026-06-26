@@ -16,7 +16,7 @@ interface Q { id: string; label: string; type: QType; required: boolean; placeho
 const BASE_QUESTIONS: Q[] = [
   { id: 'name', label: '학생 이름', type: 'text', required: true, placeholder: '홍길동' },
   { id: 'school', label: '학교명', type: 'text', required: true, placeholder: '예) 한강중학교' },
-  { id: 'grade', label: '학년', type: 'radio', required: true, options: ['중2', '중3'] },
+  { id: 'grade', label: '학년', type: 'radio', required: true, options: ['중3'] },
   { id: 'gender', label: '성별', type: 'radio', required: true, options: ['남성', '여성'] },
   { id: 'birth', label: '생년월일', type: 'date', required: true },
   { id: 'parentPhone', label: '부모님 연락처', type: 'tel', required: true, placeholder: '010-0000-0000' },
@@ -31,11 +31,11 @@ export default function Apply() {
   const [privacy, setPrivacy] = useState<string | null>(null)
   const [course, setCourse] = useState<string | null>(null)
   const [noticeChecked, setNoticeChecked] = useState(false)
-  const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [answers, setAnswers] = useState<Record<string, string>>({ grade: '중3' })
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
-  const questions = course === '일반전형 특강' ? [...BASE_QUESTIONS, GENERAL_EXTRA] : BASE_QUESTIONS
+  const questions = course === '인성면접 강화' ? [...BASE_QUESTIONS, GENERAL_EXTRA] : BASE_QUESTIONS
   const step1CanNext = privacy === '네' && course !== null
   const step2CanNext = noticeChecked
   const step3CanSubmit = questions.filter(q => q.required).every(q => (answers[q.id] || '').trim() !== '')
@@ -156,7 +156,7 @@ export default function Apply() {
                 <div style={{ fontSize: 16, fontWeight: 700, color: '#18181b', marginBottom: 14 }}>원하시는 수업을 선택해주세요</div>
                 {[
                   { name: '입시 단기특강', desc: '특별전형 + 일반전형 병행 · 토요일 6h + 수요일 1h' },
-                  { name: '일반전형 특강', desc: '일반전형 집중 · 토/일 3h + 수요일 1h' },
+                  { name: '인성면접 강화', desc: '면접·자기소개서 집중 · 모의면접 반복 훈련' },
                 ].map(opt => (
                   <button
                     key={opt.name}
