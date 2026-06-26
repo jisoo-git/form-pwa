@@ -53,9 +53,9 @@ export default function Apply() {
     fetchActiveForm()
   }, [])
 
-  // 선택된 수업명과 일치하는 섹션만 Step 3에 사용
+  // 선택된 수업명과 정확히 일치하는 섹션만 사용 (fallback 없음)
   const courseSection = course
-    ? (activeForm?.sections.find(s => s.title === course) ?? activeForm?.sections[0] ?? null)
+    ? (activeForm?.sections.find(s => s.title === course) ?? null)
     : null
   const step3Questions = courseSection?.questions ?? []
 
@@ -373,7 +373,14 @@ export default function Apply() {
                 </div>
               )}
 
-              {!formLoading && activeForm && (
+              {!formLoading && activeForm && !courseSection && (
+                <div style={{ padding: '40px 20px', textAlign: 'center', background: '#fff', borderRadius: 14, border: '1px solid #c8d0dc' }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#18181b', marginBottom: 8 }}>해당 수업 폼이 준비 중입니다</div>
+                  <div style={{ fontSize: 13, color: '#71717a' }}>문의: 010-2838-2391</div>
+                </div>
+              )}
+
+              {!formLoading && activeForm && courseSection && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {(() => {
                     let qNum = 0
