@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { db } from '../firebase/config'
-import { doc, getDoc } from 'firebase/firestore'
+import { doc, getDoc, updateDoc, increment } from 'firebase/firestore'
 import type { Post } from '../types'
 import { FALLBACK_POSTS } from './Blog'
 
@@ -34,6 +34,7 @@ export default function BlogPost() {
         const snap = await getDoc(doc(db, 'blogPosts', id as string))
         if (snap.exists()) {
           setPost({ id: snap.id, ...(snap.data() as Omit<Post, 'id'>) })
+          updateDoc(snap.ref, { views: increment(1) })
         } else {
           const fallback = FALLBACK_POSTS.find(p => p.id === id)
           fallback ? setPost(fallback) : setNotFound(true)
