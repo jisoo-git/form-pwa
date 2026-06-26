@@ -262,10 +262,13 @@ export default function AdminBlogWrite() {
 
         {/* 대표 이미지 */}
         <Field label="대표 이미지 URL">
+          <div style={{ fontSize: 11, color: '#8c959f', marginBottom: 8 }}>
+            프로젝트 이미지: <code style={{ background: '#f4f4f6', padding: '1px 5px', borderRadius: 4 }}>/blog/이미지명.jpg</code> 또는 외부 URL
+          </div>
           <input
             value={coverImage}
             onChange={e => setCoverImage(e.target.value)}
-            placeholder="https://..."
+            placeholder="/blog/이미지명.jpg 또는 https://..."
             style={{ width: '100%', border: '1px solid #c8d0dc', borderRadius: 8, padding: '9px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
             onFocus={e => { e.target.style.borderColor = '#2563eb' }}
             onBlur={e => { e.target.style.borderColor = '#c8d0dc' }}
