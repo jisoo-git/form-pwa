@@ -267,12 +267,15 @@ export default function Apply() {
             <div>
               <div style={{ fontSize: 18, fontWeight: 800, color: '#18181b', marginBottom: 20 }}>신청 전 확인</div>
 
+              <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 12, padding: '14px 16px', marginBottom: 12 }}>
+                <div style={{ fontSize: 14, color: '#1e3a8a', lineHeight: 1.75 }}>
+                  수강신청 시 입력하신 개인정보(이름, 연락처, 학교 등)는 수업 운영 및 안내 목적으로만 사용되며, 제3자에게 제공되지 않습니다.
+                </div>
+              </div>
+
               <div style={{ background: '#fff', border: '1px solid #c8d0dc', borderRadius: 14, padding: 20, marginBottom: 12, boxShadow: '0 1px 4px rgba(0,55,112,0.05)' }}>
                 <div style={{ fontSize: 12, color: '#8c959f', fontWeight: 600, marginBottom: 6 }}>Q1 · 필수</div>
                 <div style={{ fontSize: 16, fontWeight: 700, color: '#18181b', marginBottom: 12 }}>개인정보 활용에 동의하십니까?</div>
-                <div style={{ fontSize: 14, color: '#52525b', lineHeight: 1.65, marginBottom: 14 }}>
-                  수강신청 시 입력하신 개인정보(이름, 연락처, 학교 등)는 수업 운영 및 안내 목적으로만 사용되며, 제3자에게 제공되지 않습니다.
-                </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   {['네', '아니오'].map(opt => (
                     <button key={opt} type="button" onClick={() => setPrivacy(opt)}
