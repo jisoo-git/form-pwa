@@ -101,6 +101,7 @@ function BlogCard({ post, onClick }: { post: Post; onClick: () => void }) {
         cursor: 'pointer',
         display: 'flex',
         flexDirection: 'column',
+        height: '100%',
       }}
     >
       {/* 대표 이미지 — 고정 150px */}
@@ -133,8 +134,6 @@ function BlogCard({ post, onClick }: { post: Post; onClick: () => void }) {
         <div style={{
           flex: 1,
           fontSize: 13, color: '#71717a', lineHeight: 1.55,
-          overflow: 'hidden', display: '-webkit-box',
-          WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
         }}>
           {post.excerpt}
         </div>
