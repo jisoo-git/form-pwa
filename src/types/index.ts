@@ -44,13 +44,6 @@ export interface Form {
   sections: Section[]
 }
 
-export interface ContentBlock {
-  type: 'text' | 'image'
-  text?: string
-  url?: string
-  caption?: string
-}
-
 export interface Post {
   id: string
   tag: string
@@ -59,7 +52,7 @@ export interface Post {
   read: string
   excerpt: string
   coverImage: string
-  content: ContentBlock[]
+  content: string
   pinned?: boolean
   views?: number
   published?: boolean

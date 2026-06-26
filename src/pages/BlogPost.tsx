@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { db } from '../firebase/config'
 import { doc, getDoc } from 'firebase/firestore'
 import type { Post } from '../types'
@@ -96,31 +98,8 @@ export default function BlogPost() {
         )}
 
         {/* 본문 */}
-        <div style={{ padding: '18px 0' }}>
-          {post.content.map((block, i) => {
-            if (block.type === 'text') {
-              return (
-                <p key={i} style={{ fontSize: 16, lineHeight: 1.8, color: '#3f3f46', margin: '0 0 20px' }}>
-                  {block.text}
-                </p>
-              )
-            }
-            if (block.type === 'image' && block.url) {
-              return (
-                <div key={i} style={{ margin: '8px 0 24px' }}>
-                  <img
-                    src={block.url}
-                    alt={block.caption || ''}
-                    style={{ display: 'block', width: '100%', borderRadius: 12, background: '#f0f1f4' }}
-                  />
-                  {block.caption && (
-                    <div style={{ fontSize: 12, color: '#9b9ba5', textAlign: 'center', marginTop: 6 }}>{block.caption}</div>
-                  )}
-                </div>
-              )
-            }
-            return null
-          })}
+        <div className="md-preview" style={{ padding: '18px 0' }}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{typeof post.content === 'string' ? post.content : ''}</ReactMarkdown>
 
           {/* 하단 CTA — redesign 기준 */}
           <div style={{ background: '#fafafb', border: '1px solid #d4d9e0', borderRadius: 16, padding: '22px', marginTop: 8, textAlign: 'center' }}>

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { collection, addDoc, doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { db } from '../../firebase/config'
-import type { Post, ContentBlock } from '../../types'
+import type { Post } from '../../types'
 import { FALLBACK_POSTS } from '../Blog'
 
 const COMMON_TAGS = ['특별전형', '일반전형', '소질적성', '면접', '실적물', '자소서', '합격후기', '특성화고']
-const newId = () => crypto.randomUUID()
 
 function Field({ label, sub, children }: { label: string; sub?: string; children: React.ReactNode }) {
   return (
@@ -29,15 +30,13 @@ export default function AdminBlogWrite() {
   const [title, setTitle] = useState('')
   const [excerpt, setExcerpt] = useState('')
   const [coverImage, setCoverImage] = useState('')
-  const [blocks, setBlocks] = useState<(ContentBlock & { _id: string })[]>([
-    { _id: newId(), type: 'text', text: '' },
-  ])
+  const [markdown, setMarkdown] = useState('')
+  const [preview, setPreview] = useState(false)
   const [saving, setSaving] = useState(false)
   const [savingDraft, setSavingDraft] = useState(false)
   const [loading, setLoading] = useState(isEdit)
   const [currentPublished, setCurrentPublished] = useState<boolean | undefined>(undefined)
 
-  // 편집 모드: 기존 글 로드
   useEffect(() => {
     if (!isEdit) return
     async function loadPost() {
@@ -50,7 +49,7 @@ export default function AdminBlogWrite() {
         setTitle(post.title)
         setExcerpt(post.excerpt)
         setCoverImage(post.coverImage)
-        setBlocks(post.content.map(b => ({ ...b, _id: newId() })))
+        setMarkdown(typeof post.content === 'string' ? post.content : '')
         setCurrentPublished(post.published)
       } finally {
         setLoading(false)
@@ -59,40 +58,16 @@ export default function AdminBlogWrite() {
     loadPost()
   }, [id, isEdit])
 
-  function addTextBlock() {
-    setBlocks(prev => [...prev, { _id: newId(), type: 'text' as const, text: '' }])
-  }
-  function addImageBlock() {
-    setBlocks(prev => [...prev, { _id: newId(), type: 'image' as const, url: '', caption: '' }])
-  }
-  function removeBlock(blockId: string) {
-    setBlocks(prev => prev.filter(b => b._id !== blockId))
-  }
-  function updateBlock(blockId: string, updates: Partial<ContentBlock>) {
-    setBlocks(prev => prev.map(b => b._id === blockId ? { ...b, ...updates } : b))
-  }
-  function moveBlock(index: number, dir: -1 | 1) {
-    const next = index + dir
-    if (next < 0 || next >= blocks.length) return
-    const arr = [...blocks]
-    ;[arr[index], arr[next]] = [arr[next], arr[index]]
-    setBlocks(arr)
-  }
-
   function estimateRead() {
-    const totalChars = blocks.filter(b => b.type === 'text').reduce((acc, b) => acc + (b.text?.length ?? 0), 0)
-    const mins = Math.max(1, Math.round(totalChars / 500))
+    const mins = Math.max(1, Math.round(markdown.length / 500))
     return `${mins}분`
   }
 
   function buildPayload(published: boolean) {
-    const cleanBlocks: ContentBlock[] = blocks
-      .filter(b => b.type === 'text' ? !!b.text?.trim() : !!b.url?.trim())
-      .map(({ _id: _, ...b }) => b)
     const today = new Date().toISOString().slice(0, 10)
     return {
       tag: tag.trim(), title: title.trim(), excerpt: excerpt.trim(),
-      coverImage: coverImage.trim(), content: cleanBlocks,
+      coverImage: coverImage.trim(), content: markdown,
       ...(isEdit ? {} : { date: today }),
       read: estimateRead(),
       published,
@@ -123,8 +98,7 @@ export default function AdminBlogWrite() {
     if (!tag.trim()) return alert('태그를 입력해주세요.')
     if (!title.trim()) return alert('제목을 입력해주세요.')
     if (!excerpt.trim()) return alert('요약을 입력해주세요.')
-    const cleanBlocks = blocks.filter(b => b.type === 'text' ? !!b.text?.trim() : !!b.url?.trim())
-    if (cleanBlocks.length === 0) return alert('본문을 입력해주세요.')
+    if (!markdown.trim()) return alert('본문을 입력해주세요.')
     setSaving(true)
     try {
       const payload = buildPayload(true)
@@ -141,7 +115,6 @@ export default function AdminBlogWrite() {
     }
   }
 
-  // 편집 모드에서 published 상태 유지 저장 (현재 상태 그대로)
   async function handleSaveEdit() {
     if (!tag.trim()) return alert('태그를 입력해주세요.')
     if (!title.trim()) return alert('제목을 입력해주세요.')
@@ -201,7 +174,6 @@ export default function AdminBlogWrite() {
           >
             취소
           </button>
-          {/* 새 글: 초안저장 + 발행하기 / 편집(초안): 초안저장 + 발행하기 / 편집(발행됨): 저장 */}
           {(!isEdit || isDraft) && (
             <button
               onClick={handleSaveDraft}
@@ -305,79 +277,67 @@ export default function AdminBlogWrite() {
           )}
         </Field>
 
-        {/* 본문 블록 에디터 */}
-        <div style={{ background: '#fff', border: '1px solid #c8d0dc', borderRadius: 12, padding: '16px 18px' }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: '#52525b', marginBottom: 12 }}>본문</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {blocks.map((block, i) => (
-              <div key={block._id} style={{ border: '1px solid #c8d0dc', borderRadius: 10, overflow: 'hidden' }}>
-                {/* 블록 툴바 */}
-                <div style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '8px 12px', background: '#f9fafb', borderBottom: '1px solid #c8d0dc',
-                }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#71717a' }}>
-                    {block.type === 'text' ? '📝 텍스트' : '🖼️ 이미지'}
-                  </span>
-                  <div style={{ display: 'flex', gap: 4 }}>
-                    <button onClick={() => moveBlock(i, -1)} disabled={i === 0} style={{ background: 'none', border: 'none', color: i === 0 ? '#c8d0dc' : '#8c959f', fontSize: 13, padding: '4px 6px', cursor: i === 0 ? 'default' : 'pointer', minWidth: 28 }}>↑</button>
-                    <button onClick={() => moveBlock(i, 1)} disabled={i === blocks.length - 1} style={{ background: 'none', border: 'none', color: i === blocks.length - 1 ? '#c8d0dc' : '#8c959f', fontSize: 13, padding: '4px 6px', cursor: i === blocks.length - 1 ? 'default' : 'pointer', minWidth: 28 }}>↓</button>
-                    <button onClick={() => removeBlock(block._id)}
-                      style={{ background: 'none', border: 'none', color: '#d4d4d8', fontSize: 16, padding: '4px 6px', cursor: 'pointer', minWidth: 28 }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#ef4444' }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#d4d4d8' }}
-                    >×</button>
-                  </div>
-                </div>
-                {/* 블록 내용 */}
-                {block.type === 'text' ? (
-                  <textarea
-                    value={block.text ?? ''}
-                    onChange={e => updateBlock(block._id, { text: e.target.value })}
-                    placeholder="내용을 입력하세요..."
-                    rows={4}
-                    style={{ width: '100%', border: 'none', padding: '12px 14px', fontSize: 14, outline: 'none', resize: 'vertical', boxSizing: 'border-box', lineHeight: 1.7, color: '#3f3f46', background: '#fff' }}
-                  />
-                ) : (
-                  <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8, background: '#fff' }}>
-                    <input
-                      value={block.url ?? ''}
-                      onChange={e => updateBlock(block._id, { url: e.target.value })}
-                      placeholder="이미지 URL (https://...)"
-                      style={{ width: '100%', border: '1px solid #c8d0dc', borderRadius: 8, padding: '9px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
-                      onFocus={e => { e.target.style.borderColor = '#2563eb' }}
-                      onBlur={e => { e.target.style.borderColor = '#c8d0dc' }}
-                    />
-                    {block.url && (
-                      <img src={block.url} alt="" style={{ width: '100%', borderRadius: 8, maxHeight: 180, objectFit: 'cover', background: '#f0f1f4' }} />
-                    )}
-                    <input
-                      value={block.caption ?? ''}
-                      onChange={e => updateBlock(block._id, { caption: e.target.value })}
-                      placeholder="이미지 설명 (선택)"
-                      style={{ width: '100%', border: '1px solid #c8d0dc', borderRadius: 8, padding: '8px 12px', fontSize: 12, outline: 'none', boxSizing: 'border-box', color: '#71717a' }}
-                    />
-                  </div>
-                )}
-              </div>
-            ))}
+        {/* 마크다운 에디터 */}
+        <div style={{ background: '#fff', border: '1px solid #c8d0dc', borderRadius: 12, overflow: 'hidden' }}>
+          {/* 탭 + 치트시트 */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderBottom: '1px solid #c8d0dc', background: '#f9fafb' }}>
+            <div style={{ display: 'flex', gap: 2 }}>
+              <button
+                onClick={() => setPreview(false)}
+                style={{
+                  padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 600,
+                  border: 'none', cursor: 'pointer',
+                  background: !preview ? '#2563eb' : 'none',
+                  color: !preview ? '#fff' : '#71717a',
+                }}
+              >
+                편집
+              </button>
+              <button
+                onClick={() => setPreview(true)}
+                style={{
+                  padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 600,
+                  border: 'none', cursor: 'pointer',
+                  background: preview ? '#2563eb' : 'none',
+                  color: preview ? '#fff' : '#71717a',
+                }}
+              >
+                미리보기
+              </button>
+            </div>
+            <div style={{ fontSize: 11, color: '#a1a1aa', fontWeight: 500 }}>
+              <span style={{ marginRight: 8 }}><b>**굵게**</b></span>
+              <span style={{ marginRight: 8 }}><i>*기울임*</i></span>
+              <span style={{ marginRight: 8 }}>## 제목</span>
+              <span>![설명](url)</span>
+            </div>
           </div>
 
-          {/* 블록 추가 */}
-          <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-            <button
-              onClick={addTextBlock}
-              style={{ flex: 1, background: '#f9fafb', border: '1px dashed #bfdbfe', color: '#2563eb', borderRadius: 8, padding: '11px', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
-            >
-              + 텍스트 블록
-            </button>
-            <button
-              onClick={addImageBlock}
-              style={{ flex: 1, background: '#f9fafb', border: '1px dashed #bfdbfe', color: '#2563eb', borderRadius: 8, padding: '11px', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
-            >
-              + 이미지 블록
-            </button>
-          </div>
+          {/* 편집 */}
+          {!preview && (
+            <textarea
+              value={markdown}
+              onChange={e => setMarkdown(e.target.value)}
+              placeholder={`본문을 마크다운으로 작성하세요.\n\n## 소제목\n\n단락 내용을 여기에 씁니다.\n\n**굵은 글씨**, *기울임*\n\n![이미지 설명](https://이미지URL)`}
+              style={{
+                width: '100%', minHeight: 400, border: 'none',
+                padding: '16px 18px', fontSize: 14, lineHeight: 1.8,
+                outline: 'none', resize: 'vertical', boxSizing: 'border-box',
+                color: '#3f3f46', fontFamily: 'monospace',
+              }}
+            />
+          )}
+
+          {/* 미리보기 */}
+          {preview && (
+            <div className="md-preview" style={{ padding: '16px 18px', minHeight: 400 }}>
+              {markdown.trim() ? (
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
+              ) : (
+                <p style={{ color: '#a1a1aa', fontSize: 14 }}>본문을 입력하면 여기에 미리보기가 표시됩니다.</p>
+              )}
+            </div>
+          )}
         </div>
 
       </div>
