@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import { db } from '../firebase/config'
+import whyContent from '../data/why.md?raw'
 
 interface Banner {
   id: string; badge: string; title: string; sub: string
@@ -22,15 +25,9 @@ const STATS = [
   { num: '9년', label: '입시 전문' },
 ]
 
-const FEATURES = [
-  { icon: '🎯', title: '특별·일반전형 병행 전략', desc: '한 학원에서 두 전형을 모두 준비합니다. 중간에 전략을 바꿔도 흔들리지 않도록 설계된 커리큘럼입니다.' },
-  { icon: '📐', title: '코딩 수학 전문 교육', desc: '디미고 소질적성검사에 특화된 C언어·정보소양·논리 수학을 체계적으로 학습합니다.' },
-  { icon: '📝', title: '논술·면접까지 완성', desc: '자기소개서, 실적설명서 작성부터 면접까지 — 입시의 모든 단계를 함께합니다.' },
-]
-
 const COURSES_PREVIEW = [
   { tag: 'COURSE 01', name: '입시 단기특강', sub: '특별전형 + 일반전형 병행 · 16주', items: ['특전 실적물 제작', '코딩 수학 / 정보 교육', '자소서 · 면접 완성'], color: '#1d4ed8', bg: '#dbeafe' },
-  { tag: 'COURSE 02', name: '일반전형 특강', sub: '일반전형 집중 준비 · 16주', items: ['코딩 수학 집중', '정보 교육 심화', '면접 · 자기소개서'], color: '#1d4ed8', bg: '#eff6ff' },
+  { tag: 'COURSE 02', name: '인성면접 강화', sub: '면접·자기소개서 집중 준비', items: ['인성면접 전략 수립', '자기소개서 완성', '모의면접 반복 훈련'], color: '#1d4ed8', bg: '#eff6ff' },
 ]
 
 export default function Home() {
@@ -190,41 +187,36 @@ export default function Home() {
       {/* ══ SECTION 3: WHY 인코딩플러스 ══ */}
       <div style={{ background: '#fff', padding: '52px 0' }}>
         <div className="md:max-w-[1100px] md:mx-auto" style={{ padding: '0 18px' }}>
-          <div style={{ textAlign: 'center', marginBottom: 20 }}>
+          <div style={{ textAlign: 'center', marginBottom: 32 }}>
             <div style={{ width: 28, height: 3, background: '#2563eb', borderRadius: 999, margin: '0 auto 10px' }} />
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#2563eb', letterSpacing: '0.1em', marginBottom: 6 }}>WHY 인코딩플러스</div>
-            <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#18181b' }}>IT와 국어, 두 축으로 준비합니다</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#2563eb', letterSpacing: '0.1em', marginBottom: 10 }}>WHY 인코딩플러스</div>
+            <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#18181b', lineHeight: 1.35 }}>
+              9년간 212명 합격생이<br />인코딩플러스를 선택한 이유
+            </div>
+            <div style={{ fontSize: 14, color: '#71717a', marginTop: 10 }}>디미고 입시, 혼자 준비하기엔 너무 많은 것이 걸려 있습니다.</div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {FEATURES.map(f => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {whyContent.split('\n---\n').filter(s => s.trim()).map((section, i) => (
               <div
-                key={f.title}
-                className="hover-card"
-                style={{
-                  background: '#fff',
-                  border: '1px solid #c8d0dc',
-                  borderRadius: 14,
-                  padding: 20,
-                  boxShadow: '0 2px 8px rgba(0,55,112,0.07)',
-                }}
+                key={i}
+                className="hover-card why-card-md"
+                style={{ background: '#fff', border: '1px solid #c8d0dc', borderRadius: 14, padding: '20px', boxShadow: '0 2px 8px rgba(0,55,112,0.07)' }}
               >
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: '#dbeafe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 14 }}>{f.icon}</div>
-                <div style={{ fontWeight: 700, fontSize: 15, color: '#18181b', marginBottom: 6 }}>{f.title}</div>
-                <div style={{ fontSize: 13, color: '#52525b', lineHeight: 1.65 }}>{f.desc}</div>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{section.trim()}</ReactMarkdown>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* ══ SECTION 4: 개설 강좌 ══ */}
+      {/* ══ SECTION 4: 입시 특강 ══ */}
       <div style={{ background: '#fafafa', padding: '52px 0' }}>
         <div className="md:max-w-[1100px] md:mx-auto" style={{ padding: '0 18px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 18 }}>
             <div>
               <div style={{ width: 28, height: 3, background: '#2563eb', borderRadius: 999, marginBottom: 10 }} />
               <div style={{ fontSize: 11, fontWeight: 700, color: '#2563eb', letterSpacing: '0.1em', marginBottom: 4 }}>COURSES</div>
-              <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#18181b' }}>개설 강좌</div>
+              <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#18181b' }}>입시 특강</div>
             </div>
             <button
               onClick={() => navigate('/courses')}
