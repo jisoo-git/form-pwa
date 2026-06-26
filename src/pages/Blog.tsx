@@ -209,10 +209,7 @@ export default function Blog() {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 14, gridAutoRows: '1fr' }}>
                     {pinnedPosts.map(post => (
-                      <div key={post.id} style={{ position: 'relative' }}>
-                        <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 1, background: '#2563eb', borderRadius: 5, padding: '2px 6px', fontSize: 11 }}>📌</div>
-                        <BlogCard post={post} onClick={() => navigate(`/blog/${post.id}`)} />
-                      </div>
+                      <BlogCard key={post.id} post={post} onClick={() => navigate(`/blog/${post.id}`)} />
                     ))}
                   </div>
                   <div style={{ borderBottom: '1px solid #c8d0dc', marginTop: 24 }} />
