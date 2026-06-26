@@ -17,7 +17,7 @@ const NOTICES = [
 ]
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', border: '1px solid #e5e5ea', borderRadius: 10,
+  width: '100%', border: '1px solid #c8d0dc', borderRadius: 10,
   padding: '12px 14px', fontSize: 15, outline: 'none',
   background: '#fff', boxSizing: 'border-box', fontFamily: 'inherit',
 }
@@ -139,25 +139,25 @@ export default function Apply() {
           <input type="text" value={(ans as string) || ''} onChange={e => setAnswer(q.id, e.target.value)}
             style={inputStyle}
             onFocus={e => { e.target.style.borderColor = '#2563eb' }}
-            onBlur={e => { e.target.style.borderColor = '#e5e5ea' }} />
+            onBlur={e => { e.target.style.borderColor = '#c8d0dc' }} />
         )}
         {q.type === 'long' && (
           <textarea value={(ans as string) || ''} onChange={e => setAnswer(q.id, e.target.value)}
             rows={4} style={{ ...inputStyle, resize: 'vertical' }}
             onFocus={e => { (e.target as HTMLTextAreaElement).style.borderColor = '#2563eb' }}
-            onBlur={e => { (e.target as HTMLTextAreaElement).style.borderColor = '#e5e5ea' }} />
+            onBlur={e => { (e.target as HTMLTextAreaElement).style.borderColor = '#c8d0dc' }} />
         )}
         {q.type === 'number' && (
           <input type="number" value={(ans as string) || ''} onChange={e => setAnswer(q.id, e.target.value)}
             style={inputStyle}
             onFocus={e => { e.target.style.borderColor = '#2563eb' }}
-            onBlur={e => { e.target.style.borderColor = '#e5e5ea' }} />
+            onBlur={e => { e.target.style.borderColor = '#c8d0dc' }} />
         )}
         {q.type === 'date' && (
           <input type="date" value={(ans as string) || ''} onChange={e => setAnswer(q.id, e.target.value)}
             style={inputStyle}
             onFocus={e => { e.target.style.borderColor = '#2563eb' }}
-            onBlur={e => { e.target.style.borderColor = '#e5e5ea' }} />
+            onBlur={e => { e.target.style.borderColor = '#c8d0dc' }} />
         )}
         {q.type === 'radio' && (
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -165,7 +165,7 @@ export default function Apply() {
               <button key={opt} type="button" onClick={() => setAnswer(q.id, opt)}
                 style={{
                   flex: 1, minWidth: 72, padding: '11px 8px', borderRadius: 10,
-                  border: ans === opt ? '2px solid #2563eb' : '1px solid #e5e5ea',
+                  border: ans === opt ? '2px solid #2563eb' : '1px solid #c8d0dc',
                   background: ans === opt ? '#dbeafe' : '#fff',
                   fontSize: 14, fontWeight: ans === opt ? 700 : 500,
                   color: ans === opt ? '#1d4ed8' : '#52525b',
@@ -179,7 +179,7 @@ export default function Apply() {
               <button key={opt} type="button" onClick={() => setAnswer(q.id, opt)}
                 style={{
                   flex: 1, padding: '14px 8px', borderRadius: 10,
-                  border: ans === opt ? '2px solid #2563eb' : '1px solid #e5e5ea',
+                  border: ans === opt ? '2px solid #2563eb' : '1px solid #c8d0dc',
                   background: ans === opt ? '#dbeafe' : '#fff',
                   fontSize: 22, fontWeight: 800,
                   color: ans === opt ? '#1d4ed8' : '#52525b',
@@ -195,7 +195,7 @@ export default function Apply() {
                 <button key={opt} type="button" onClick={() => toggleCheckbox(q.id, opt)}
                   style={{
                     padding: '12px 14px', textAlign: 'left', borderRadius: 10,
-                    border: checked ? '2px solid #2563eb' : '1px solid #e5e5ea',
+                    border: checked ? '2px solid #2563eb' : '1px solid #c8d0dc',
                     background: checked ? '#dbeafe' : '#fff',
                     display: 'flex', alignItems: 'center', gap: 10,
                   }}>
@@ -223,7 +223,7 @@ export default function Apply() {
           <input type="number" value={(ans as string) || ''} onChange={e => setAnswer(q.id, e.target.value)}
             style={inputStyle}
             onFocus={e => { e.target.style.borderColor = '#2563eb' }}
-            onBlur={e => { e.target.style.borderColor = '#e5e5ea' }} />
+            onBlur={e => { e.target.style.borderColor = '#c8d0dc' }} />
         )}
       </div>
     )
@@ -278,7 +278,7 @@ export default function Apply() {
                     <button key={opt} type="button" onClick={() => setPrivacy(opt)}
                       style={{
                         flex: 1, padding: '12px 8px',
-                        border: privacy === opt ? '2px solid #2563eb' : '1px solid #e5e5ea',
+                        border: privacy === opt ? '2px solid #2563eb' : '1px solid #c8d0dc',
                         borderRadius: 10,
                         background: privacy === opt ? '#dbeafe' : '#fff',
                         fontSize: 15, fontWeight: privacy === opt ? 700 : 500,
@@ -300,7 +300,7 @@ export default function Apply() {
                   <button key={opt.name} type="button" onClick={() => setCourse(opt.name)}
                     style={{
                       width: '100%', padding: '14px 16px',
-                      border: course === opt.name ? '2px solid #2563eb' : '1px solid #e5e5ea',
+                      border: course === opt.name ? '2px solid #2563eb' : '1px solid #c8d0dc',
                       borderRadius: 12,
                       background: course === opt.name ? '#dbeafe' : '#fff',
                       textAlign: 'left', display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8,
@@ -354,7 +354,7 @@ export default function Apply() {
               <button type="button" onClick={() => setNoticeChecked(v => !v)}
                 style={{
                   width: '100%', padding: '16px 18px',
-                  border: noticeChecked ? '2px solid #2563eb' : '1px solid #e5e5ea',
+                  border: noticeChecked ? '2px solid #2563eb' : '1px solid #c8d0dc',
                   borderRadius: 12, background: noticeChecked ? '#dbeafe' : '#fff',
                   display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left',
                 }}>
@@ -421,7 +421,7 @@ export default function Apply() {
         <div className="apply-btn-area">
           {step > 1 && (
             <button onClick={goPrev}
-              style={{ flex: '0 0 auto', padding: '14px 22px', border: '1px solid #e5e5ea', borderRadius: 11, background: '#fff', fontSize: 15, fontWeight: 600, color: '#52525b' }}>
+              style={{ flex: '0 0 auto', padding: '14px 22px', border: '1px solid #c8d0dc', borderRadius: 11, background: '#fff', fontSize: 15, fontWeight: 600, color: '#52525b' }}>
               이전
             </button>
           )}
@@ -430,7 +430,7 @@ export default function Apply() {
               disabled={step === 1 ? !step1CanNext : !step2CanNext}
               style={{
                 flex: 1, padding: '14px 0', border: 'none', borderRadius: 11,
-                background: (step === 1 ? step1CanNext : step2CanNext) ? '#2563eb' : '#93c5fd',
+                background: (step === 1 ? step1CanNext : step2CanNext) ? '#2563eb' : '#bfdbfe',
                 color: '#fff', fontSize: 16, fontWeight: 700,
                 cursor: (step === 1 ? step1CanNext : step2CanNext) ? 'pointer' : 'not-allowed',
               }}>
@@ -442,7 +442,7 @@ export default function Apply() {
               disabled={!step3CanSubmit || submitting}
               style={{
                 flex: 1, padding: '14px 0', border: 'none', borderRadius: 11,
-                background: step3CanSubmit && !submitting ? '#2563eb' : '#93c5fd',
+                background: step3CanSubmit && !submitting ? '#2563eb' : '#bfdbfe',
                 color: '#fff', fontSize: 16, fontWeight: 700,
                 cursor: step3CanSubmit && !submitting ? 'pointer' : 'not-allowed',
               }}>
