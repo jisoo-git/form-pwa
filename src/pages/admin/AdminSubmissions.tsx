@@ -43,6 +43,9 @@ function formatDate(sub: Submission) {
   }
 }
 
+// UUID 여부 판단 (8-4-4-4-12 패턴)
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 export default function AdminSubmissions() {
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [loading, setLoading] = useState(true)
@@ -50,6 +53,8 @@ export default function AdminSubmissions() {
   const [selected, setSelected] = useState<Submission | null>(null)
   const [updating, setUpdating] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
+  // questionId → label 매핑 (기존 UUID 키 데이터 처리용)
+  const [labelMap, setLabelMap] = useState<Record<string, string>>({})
 
   async function fetchSubmissions() {
     try {
@@ -63,7 +68,19 @@ export default function AdminSubmissions() {
     }
   }
 
-  useEffect(() => { fetchSubmissions() }, [])
+  async function fetchLabelMap() {
+    try {
+      const snap = await getDocs(collection(db, 'forms'))
+      const map: Record<string, string> = {}
+      snap.docs.forEach(d => {
+        const sections = (d.data().sections ?? []) as { questions: { id: string; label: string }[] }[]
+        sections.forEach(s => s.questions.forEach(q => { if (q.id && q.label) map[q.id] = q.label }))
+      })
+      setLabelMap(map)
+    } catch {}
+  }
+
+  useEffect(() => { fetchSubmissions(); fetchLabelMap() }, [])
 
   const filterKey = FILTER_MAP[filter]
   const filtered = filterKey ? submissions.filter(s => s.status === filterKey) : submissions
@@ -255,21 +272,24 @@ export default function AdminSubmissions() {
               {/* 상세 정보 */}
               {selected.detail && Object.keys(selected.detail).length > 0 && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 0, marginBottom: 20, border: '1px solid #c8d0dc', borderRadius: 12, overflow: 'hidden' }}>
-                  {Object.entries(selected.detail).map(([label, val], i, arr) => (
-                    <div
-                      key={label}
-                      style={{
-                        display: 'flex',
-                        padding: '12px 16px',
-                        borderBottom: i < arr.length - 1 ? '1px solid #f4f4f6' : 'none',
-                        background: '#fff',
-                        gap: 12,
-                      }}
-                    >
-                      <div style={{ minWidth: 120, fontSize: 13, color: '#71717a', fontWeight: 600, flexShrink: 0 }}>{label}</div>
-                      <div style={{ fontSize: 13, color: '#18181b', fontWeight: 500, wordBreak: 'break-all' }}>{String(val)}</div>
-                    </div>
-                  ))}
+                  {Object.entries(selected.detail).map(([key, val], i, arr) => {
+                    const label = UUID_RE.test(key) ? (labelMap[key] ?? key) : key
+                    return (
+                      <div
+                        key={key}
+                        style={{
+                          display: 'flex',
+                          padding: '12px 16px',
+                          borderBottom: i < arr.length - 1 ? '1px solid #f4f4f6' : 'none',
+                          background: '#fff',
+                          gap: 12,
+                        }}
+                      >
+                        <div style={{ minWidth: 130, fontSize: 13, color: '#71717a', fontWeight: 600, flexShrink: 0 }}>{label}</div>
+                        <div style={{ fontSize: 13, color: '#18181b', fontWeight: 500, wordBreak: 'break-all' }}>{String(val)}</div>
+                      </div>
+                    )
+                  })}
                 </div>
               )}
               {(!selected.detail || Object.keys(selected.detail).length === 0) && (

@@ -301,7 +301,7 @@ export default function Home() {
             <button
               onClick={() => navigate('/courses')}
               className="hover-btn"
-              style={{ background: '#f4f4f6', border: 'none', color: '#52525b', fontSize: 13, fontWeight: 700, padding: '8px 14px', borderRadius: 10, cursor: 'pointer' }}
+              style={{ background: '#2563eb', border: 'none', color: '#fff', fontSize: 13, fontWeight: 700, padding: '8px 16px', borderRadius: 10, cursor: 'pointer' }}
             >
               수업 상세 →
             </button>
