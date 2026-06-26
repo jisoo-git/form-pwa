@@ -146,7 +146,7 @@
 - [x] 초기 조회수 설정 스크립트 (`scripts/setInitialViews.mjs`) — 4개 포스트 적용
 
 ### 디자인 점검 필요
-- [ ] BlogPost 상세 페이지
+- [x] BlogPost 상세 페이지 (해시태그 배경 #dbeafe, 테두리 #c8d0dc, safe-area 적용)
 - [x] Courses 수업 소개 페이지 (바텀시트 제거, 전면 표시 완료)
 - [x] Apply 수강신청 페이지
 
