@@ -18,7 +18,7 @@ const FALLBACK_BANNERS: Banner[] = [
 
 const STATS = [
   { num: '212명', label: '9년 누적 합격' },
-  { num: '1위', label: '디미고 합격률' },
+  { num: '1위', label: '디미고 합격률 전국' },
   { num: '37명', label: '2026 디미고' },
   { num: '9년', label: '입시 전문' },
 ]
