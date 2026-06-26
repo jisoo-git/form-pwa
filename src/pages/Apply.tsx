@@ -97,7 +97,11 @@ export default function Apply() {
         submittedAt: serverTimestamp(),
         status: 'new',
         formId: activeForm?.id,
-        detail: answers,
+        detail: Object.fromEntries(
+          step3Questions
+            .filter(q => q.type !== 'info' && answers[q.id] !== undefined)
+            .map(q => [q.label, Array.isArray(answers[q.id]) ? (answers[q.id] as string[]).join(', ') : answers[q.id]])
+        ),
       })
       setSubmitted(true)
     } catch {

@@ -32,17 +32,6 @@ const FILTER_MAP: Record<string, string | null> = {
   '상담완료': 'done',
 }
 
-const DETAIL_LABELS: Record<string, string> = {
-  name: '학생 이름',
-  school: '학교명',
-  grade: '학년',
-  gender: '성별',
-  birth: '생년월일',
-  parentPhone: '부모님 연락처',
-  studentPhone: '학생 연락처',
-  onlineTime: '비대면 수업 시간',
-  classDay: '수업 요일',
-}
 
 function formatDate(sub: Submission) {
   if (!sub.submittedAt) return '—'
@@ -264,26 +253,30 @@ export default function AdminSubmissions() {
               </div>
 
               {/* 상세 정보 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 0, marginBottom: 20, border: '1px solid #c8d0dc', borderRadius: 12, overflow: 'hidden' }}>
-                {Object.entries(DETAIL_LABELS).map(([key, label], i, arr) => {
-                  const val = selected.detail?.[key]
-                  if (!val) return null
-                  return (
+              {selected.detail && Object.keys(selected.detail).length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 0, marginBottom: 20, border: '1px solid #c8d0dc', borderRadius: 12, overflow: 'hidden' }}>
+                  {Object.entries(selected.detail).map(([label, val], i, arr) => (
                     <div
-                      key={key}
+                      key={label}
                       style={{
                         display: 'flex',
                         padding: '12px 16px',
                         borderBottom: i < arr.length - 1 ? '1px solid #f4f4f6' : 'none',
                         background: '#fff',
+                        gap: 12,
                       }}
                     >
-                      <div style={{ width: 110, fontSize: 13, color: '#71717a', fontWeight: 600, flexShrink: 0 }}>{label}</div>
-                      <div style={{ fontSize: 13, color: '#18181b', fontWeight: 500 }}>{val}</div>
+                      <div style={{ minWidth: 120, fontSize: 13, color: '#71717a', fontWeight: 600, flexShrink: 0 }}>{label}</div>
+                      <div style={{ fontSize: 13, color: '#18181b', fontWeight: 500, wordBreak: 'break-all' }}>{String(val)}</div>
                     </div>
-                  )
-                })}
-              </div>
+                  ))}
+                </div>
+              )}
+              {(!selected.detail || Object.keys(selected.detail).length === 0) && (
+                <div style={{ marginBottom: 20, padding: '16px', background: '#f4f4f6', borderRadius: 12, fontSize: 13, color: '#8c959f', textAlign: 'center' }}>
+                  상세 응답 없음
+                </div>
+              )}
 
               {/* 상태 변경 버튼 */}
               <div style={{ marginBottom: 8 }}>
