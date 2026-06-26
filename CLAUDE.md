@@ -14,6 +14,12 @@
 - **폰트**: Pretendard (400/500/600/700/800)
 - **라우터**: React Router v6
 
+## 배포
+
+- **호스팅**: Vercel
+- **방식**: GitHub `main` 브랜치에 push → Vercel 자동 배포 (별도 명령어 불필요)
+- **Firebase**: Firestore Rules 변경 시에만 `firebase deploy --only firestore:rules` 별도 실행 필요
+
 ---
 
 ## 색상 시스템 (Blue-600 기준)
@@ -82,7 +88,7 @@ background: #fff
 
 ### 버튼
 ```
-CTA 기본: background #0099D6, color #fff, border-radius 10~12px
+CTA 기본: background #2563eb, color #fff, border-radius 10~12px
 보조: background #f4f4f6, color #52525b
 위험: background #fff, border 1px solid #fee2e2, color #ef4444
 hover-btn CSS 클래스 (index.css)
@@ -90,14 +96,14 @@ hover-btn CSS 클래스 (index.css)
 
 ### 뱃지 / 태그
 ```
-파란 뱃지: background #e0f4fb, color #0075A8, border-radius 6~8px
+파란 뱃지: background #dbeafe, color #1d4ed8, border-radius 6~8px
 해시태그 pill: border-radius 999px
 ```
 
 ### 인풋 포커스
 ```
-onFocus → borderColor #0099D6
-onBlur → borderColor #e3e8ee
+onFocus → borderColor #2563eb
+onBlur → borderColor #c8d0dc
 ```
 
 ---
@@ -122,12 +128,13 @@ onBlur → borderColor #e3e8ee
 
 | 컬렉션 | 문서 구조 |
 |--------|---------|
-| `banners` | `{ badge, title, sub, bg, cta, link, order }` |
-| `blogPosts` | `{ tag, title, excerpt, coverImage, content: ContentBlock[], date, read }` |
+| `banners` | `{ badge, title, sub, bg, image?, cta, link, order }` |
+| `blogPosts` | `{ tag, title, excerpt, coverImage, content: string, date, read, pinned?, published?, views? }` |
 | `submissions` | `{ name, course, school, phone, status, submittedAt, detail }` |
 | `forms` | `{ title, description, type, isActive, sections: Section[] }` |
 
-`ContentBlock = { type: 'text'\|'image', text?, url?, caption? }`
+`banners.image`: 배경 이미지 URL (없으면 `bg` 그라데이션 사용)  
+`blogPosts.content`: **마크다운 문자열** (react-markdown으로 렌더링)
 
 ---
 
@@ -160,8 +167,10 @@ onBlur → borderColor #e3e8ee
 
 ## 자주 실수하는 것
 
-1. `body: string[]` → 삭제됨, 새 스키마는 `content: ContentBlock[]`
+1. `blogPosts.content`는 **마크다운 string** — `ContentBlock[]` 아님
 2. 카드 hover: `className="hover-card"` 붙여야 동작
 3. BottomNav safe area: CSS `env(safe-area-inset-bottom, 0px)` 필수
 4. 관리자 Bottom Sheet: overlay에 maxWidth 넣지 말 것 (배경 어둠이 잘림)
 5. 블로그 제목 "디미고 입시 블로그" → **"입시 블로그"**
+6. 배너 CTA 버튼 레이블은 `b.cta` 직접 사용 금지 → `CTA_LABELS[b.link] || b.cta` 패턴 사용
+7. 블로그 카드 그리드: `gridAutoRows: '1fr'` + 카드에 `height: 100%` 필수 (행 높이 통일)
