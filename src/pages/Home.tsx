@@ -263,7 +263,7 @@ export default function Home() {
                     {card.tags.map(tag => (
                       <span
                         key={tag}
-                        style={{ background: '#f4f4f6', borderRadius: 6, padding: '3px 6px', fontSize: 10.5, fontWeight: 600, color: '#52525b', whiteSpace: 'nowrap', flexShrink: 1, minWidth: 0 }}
+                        style={{ background: '#dbeafe', borderRadius: 6, padding: '5px 9px', fontSize: 12, fontWeight: 700, color: '#1d4ed8', whiteSpace: 'nowrap', flexShrink: 1, minWidth: 0 }}
                       >
                         {tag}
                       </span>
