@@ -135,10 +135,20 @@
 - [ ] **조회수 카운트**: BlogPost 진입 시 `views` 필드 increment 필요
 - [ ] **이미지 업로드 UI**: 현재 로컬 `public/` 폴더 + 경로 입력 방식. 관리자 UI에서 직접 업로드 기능 미구현
 
+### Apply.tsx 수강신청 페이지
+- [x] 디자인 점검: 테두리 `#e5e5ea` → `#c8d0dc` 전체 통일
+- [x] 비활성 버튼 `#93c5fd` → `#bfdbfe` (blue-200)
+- [x] Step1 신청 확인: info 질문 Firestore 폼에서 렌더링 (PDF 링크 포함), 하드코딩 폴백 유지
+- [x] Step1 개인정보 안내문 별도 info 카드로 분리 (폼 구조 3개 질문과 일치)
+
+### 블로그 기능
+- [x] 조회수 카운트: BlogPost 진입 시 Firestore `views` increment
+- [x] 초기 조회수 설정 스크립트 (`scripts/setInitialViews.mjs`) — 4개 포스트 적용
+
 ### 디자인 점검 필요
 - [ ] BlogPost 상세 페이지
 - [x] Courses 수업 소개 페이지 (바텀시트 제거, 전면 표시 완료)
-- [ ] Apply 수강신청 페이지
+- [x] Apply 수강신청 페이지
 
 ---
 
