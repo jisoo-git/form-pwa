@@ -55,7 +55,7 @@ export default function BlogPost() {
     return (
       <div style={{ background: '#fff', minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, padding: '60px 20px' }}>
         <p style={{ fontSize: 16, color: '#52525b' }}>글을 찾을 수 없습니다</p>
-        <button onClick={() => navigate('/blog')} style={{ padding: '10px 22px', borderRadius: 10, border: '1px solid #e5e5ea', background: '#fff', color: '#52525b', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+        <button onClick={() => navigate('/blog')} style={{ padding: '10px 22px', borderRadius: 10, border: '1px solid #c8d0dc', background: '#fff', color: '#52525b', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
           목록으로
         </button>
       </div>
@@ -76,7 +76,7 @@ export default function BlogPost() {
 
         {/* 태그 + 제목 + 메타 */}
         <div style={{ padding: '14px 0 8px' }}>
-          <span style={{ display: 'inline-block', background: '#eaf6fe', color: '#2563eb', fontSize: 12, fontWeight: 700, padding: '5px 11px', borderRadius: 999 }}>
+          <span style={{ display: 'inline-block', background: '#dbeafe', color: '#2563eb', fontSize: 12, fontWeight: 700, padding: '5px 11px', borderRadius: 999 }}>
             #{post.tag}
           </span>
           <div style={{ fontSize: 25, fontWeight: 800, lineHeight: 1.35, letterSpacing: '-0.03em', marginTop: 13, color: '#18181b' }}>
@@ -116,7 +116,7 @@ export default function BlogPost() {
           </div>
 
           {/* 모바일 BottomNav 여백 */}
-          <div className="md:hidden" style={{ height: 80 }} />
+          <div className="md:hidden" style={{ height: 'calc(80px + env(safe-area-inset-bottom, 0px))' }} />
         </div>
       </div>
     </div>
