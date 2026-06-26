@@ -8,11 +8,6 @@ interface Banner {
   bg: string; image?: string; cta: string; link: string; order: number
 }
 
-const CTA_LABELS: Record<string, string> = {
-  '/apply': '수강 신청하기',
-  '/courses': '수업 보기',
-  '/blog': '블로그 보기',
-}
 
 const FALLBACK_BANNERS: Banner[] = [
   { id: '1', badge: '디미고 합격률 1위', title: '9년 누적 212명 합격', sub: '특성화고 입시 전문, 인코딩플러스가 함께합니다.', bg: 'linear-gradient(135deg, #002B5C 0%, #2563eb 100%)', cta: '수업 보기', link: '/courses', order: 0 },
@@ -131,7 +126,7 @@ export default function Home() {
                     className="hover-btn"
                     style={{ marginTop: 16, background: '#fff', color: '#18181b', border: 'none', borderRadius: 9, padding: '10px 18px', fontWeight: 700, fontSize: 13 }}
                   >
-                    {CTA_LABELS[b.link] || b.cta}
+                    {b.cta}
                   </button>
                 </div>
               </div>
