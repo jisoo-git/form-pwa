@@ -148,8 +148,10 @@ onBlur → borderColor #c8d0dc
 |------|------|----------------------|
 | 배너 배경 | `public/banners/` | `/banners/banner1.png` |
 | 블로그 대표 이미지 | `public/blog/` | `/blog/이미지명.jpg` |
+| 다운로드 파일(xlsx 등) | `public/files/` | `/files/파일명.xlsx` |
 
 외부 URL(네이버 등)은 핫링크 차단으로 사용 불가.
+파일명 공백 제거 필수 (예: `2027_교과점수계산기.xlsx`).
 
 ---
 
