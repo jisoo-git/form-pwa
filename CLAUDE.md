@@ -21,6 +21,7 @@
 - **Firebase**: Firestore Rules 변경 시에만 `firebase deploy --only firestore:rules` 별도 실행 필요
 - **GitHub 레포**: `https://github.com/jisoo-git/encodingplus`
 - **로컬 경로**: `/Users/leejisoo/folder/encodingplus`
+- **배포 URL**: `https://encodingplus.vercel.app/`
 - **GitHub 인증**: macOS 키체인 (`security find-internet-password -s github.com -w`) → GitHub REST API 직접 호출 가능
 
 ---

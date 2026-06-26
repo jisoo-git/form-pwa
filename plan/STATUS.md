@@ -104,10 +104,15 @@
 - [x] detail 표시: UUID/랜덤ID 키 → labelMap 통해 한국어 레이블로 치환
 - [x] 상세 응답 그리드 레이아웃: `grid-template-columns: auto 1fr` (레이블 배경 #f8f9fa 구분)
 
+### Home.tsx 코스 카드 색상
+- [x] COURSE 01 배경 `#dbeafe` → `#eff6ff` (blue-50), 두 코스 동일 무게감으로 통일
+- [x] 두 코스 accent color `#1d4ed8` → `#2563eb` (blue-600) 통일
+
 ### 프로젝트 이름 변경
 - [x] GitHub 레포: `form-pwa` → `encodingplus` (macOS 키체인 토큰 + GitHub API로 직접 변경)
 - [x] 로컬 폴더: `/folder/form-pwa` → `/folder/encodingplus`
 - [x] git remote URL: `https://github.com/jisoo-git/encodingplus.git`
+- [x] Vercel 프로젝트명 변경 → 배포 URL: `https://encodingplus.vercel.app/`
 
 ---
 
