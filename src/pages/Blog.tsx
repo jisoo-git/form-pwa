@@ -101,6 +101,7 @@ function BlogCard({ post, onClick }: { post: Post; onClick: () => void }) {
         cursor: 'pointer',
         display: 'flex',
         flexDirection: 'column',
+        height: 320,
       }}
     >
       {/* 대표 이미지 — 고정 150px */}
@@ -114,32 +115,32 @@ function BlogCard({ post, onClick }: { post: Post; onClick: () => void }) {
         )}
       </div>
 
-      {/* 콘텐츠 — flex:1 로 카드 남은 공간 채움, 날짜 항상 하단 고정 */}
-      <div style={{ flex: 1, padding: '16px 18px 18px', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#2563eb', marginBottom: 7, letterSpacing: '0.04em' }}>
+      {/* 콘텐츠 */}
+      <div style={{ flex: 1, padding: '14px 16px 14px', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#2563eb', marginBottom: 6, letterSpacing: '0.04em', flexShrink: 0 }}>
           #{post.tag}
         </div>
         <div style={{
-          fontSize: 16, fontWeight: 800, color: '#18181b', lineHeight: 1.4,
+          fontSize: 15, fontWeight: 800, color: '#18181b', lineHeight: 1.4,
           letterSpacing: '-0.02em',
           overflow: 'hidden', display: '-webkit-box',
           WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-          marginBottom: 8,
+          marginBottom: 8, flexShrink: 0,
+          minHeight: '42px',
         }}>
           {post.title}
         </div>
-        {/* 요약 — flex:1로 남은 높이 채움 */}
-        <div style={{ flex: 1 }}>
-          <div style={{
-            fontSize: 13, color: '#71717a', lineHeight: 1.55,
-            overflow: 'hidden', display: '-webkit-box',
-            WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-          }}>
-            {post.excerpt}
-          </div>
+        {/* 요약 */}
+        <div style={{
+          flex: 1,
+          fontSize: 13, color: '#71717a', lineHeight: 1.55,
+          overflow: 'hidden', display: '-webkit-box',
+          WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
+        }}>
+          {post.excerpt}
         </div>
         {/* 날짜/조회수 — 항상 카드 하단 */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12, fontSize: 12, color: '#a1a1aa', fontWeight: 500 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, paddingTop: 10, borderTop: '1px solid #f0f0f0', fontSize: 12, color: '#a1a1aa', fontWeight: 500, flexShrink: 0 }}>
           <span>{post.date}</span>
           <span>조회수 {post.views ?? 0}</span>
         </div>
