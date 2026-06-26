@@ -254,32 +254,16 @@ export default function Courses() {
         </div>
       </div>
 
-      {/* ── 전형 안내 ── */}
+      {/* ── 수업 카드 — 2열 그리드 ── */}
       <div style={{ padding: '8px 18px 0' }}>
-        <div className="md:max-w-[1100px] md:mx-auto">
-          <div style={{ background: '#f6f8fa', border: '1px solid #d6dde5', borderRadius: 16, padding: 22 }}>
-            <div style={{ fontWeight: 800, fontSize: 16, color: '#18181b', marginBottom: 14 }}>디미고 입시는 이렇게 진행됩니다</div>
-            {ADMISSION_INFO.map(a => (
-              <div key={a.step} style={{ display: 'flex', gap: 14, padding: '12px 0', borderTop: '1px solid #c8d0dc' }}>
-                <div style={{ flexShrink: 0, fontWeight: 700, color: '#2563eb', fontSize: 13, width: 60 }}>{a.step}</div>
-                <div style={{ fontSize: 14, color: '#3f3f46', lineHeight: 1.6 }}>{a.desc}</div>
-              </div>
-            ))}
-            <div style={{ fontSize: 12, color: '#8c959f', marginTop: 12, lineHeight: 1.6, borderTop: '1px solid #c8d0dc', paddingTop: 12 }}>
-              디미고는 전기학교로 전국 1곳만 지원 가능합니다. 일반전형 지원자도 소질적성검사(C언어·정보소양·논리적 사고) 대비가 필요합니다.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── 수업 카드 — 통합 2열 그리드 ── */}
-      <div style={{ padding: '0 18px' }}>
         <div className="md:max-w-[1100px] md:mx-auto">
           {SECTIONS.map(sec => (
             <div key={sec.id}>
-              {/* 섹션 헤더 — 항상 전체 너비 */}
-              <SectionHeader title={sec.title} desc={sec.desc} note={sec.note} />
-              {/* 카드 2열 그리드 */}
+              {sec.note && (
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, margin: '16px 0 14px', background: '#dbeafe', color: '#1d4ed8', fontSize: 12.5, fontWeight: 700, padding: '7px 12px', borderRadius: 8 }}>
+                  📅 {sec.note}
+                </div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 14 }}>
                 {sec.courses.map(c => (
                   <CourseCard key={c.id} course={c} onClick={() => setOpenCourse(c)} />
