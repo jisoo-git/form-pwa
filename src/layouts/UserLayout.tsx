@@ -15,8 +15,8 @@ export default function UserLayout() {
   }, [pathname])
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', background: '#eff6ff' }}>
-      <div className="w-full md:max-w-[1200px]" style={{ minHeight: '100vh', background: '#fff', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', background: '#fff' }}>
+      <div style={{ minHeight: '100vh', background: '#fff', position: 'relative' }}>
 
         <TopNav onMenuOpen={() => setDrawerOpen(true)} />
 

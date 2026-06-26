@@ -80,7 +80,7 @@ export default function BlogPost() {
             {post.title}
           </div>
           <div style={{ display: 'flex', gap: 8, marginTop: 13, fontSize: 13, color: '#a1a1aa', fontWeight: 500 }}>
-            <span>인코딩플러스</span><span>·</span><span>{post.date}</span><span>·</span><span>{post.read} 읽기</span>
+            <span>인코딩플러스+</span><span>·</span><span>{post.date}</span><span>·</span><span>조회수 {post.views ?? 0}</span>
           </div>
         </div>
 

@@ -34,7 +34,7 @@ export default function TopNav({ onMenuOpen }: Props) {
           style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: 2, padding: 0 }}
         >
           <span style={{ fontWeight: 800, fontSize: 18, color: '#18181b', letterSpacing: '-0.03em' }}>인코딩플러스</span>
-          <span style={{ color: '#2563eb', fontSize: 18, fontWeight: 800 }}>.</span>
+          <span style={{ color: '#2563eb', fontSize: 18, fontWeight: 800 }}>+</span>
         </button>
         <button
           onClick={onMenuOpen}
@@ -70,7 +70,7 @@ export default function TopNav({ onMenuOpen }: Props) {
           style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: 2, padding: 0 }}
         >
           <span style={{ fontWeight: 800, fontSize: 21, color: '#18181b', letterSpacing: '-0.03em' }}>인코딩플러스</span>
-          <span style={{ color: '#2563eb', fontSize: 21, fontWeight: 800 }}>.</span>
+          <span style={{ color: '#2563eb', fontSize: 21, fontWeight: 800 }}>+</span>
         </button>
         <nav style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           {NAV_LINKS.map(link => {

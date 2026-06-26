@@ -24,8 +24,8 @@ export default function AdminLayout() {
   }, [pathname])
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', background: '#eff6ff' }}>
-      <div className="w-full md:max-w-[1200px]" style={{ minHeight: '100vh', background: '#fff', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', background: '#fff' }}>
+      <div style={{ minHeight: '100vh', background: '#fff', position: 'relative' }}>
 
         {/* ── 모바일 TopNav ── */}
         <header
@@ -45,7 +45,7 @@ export default function AdminLayout() {
             style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: 2, padding: 0 }}
           >
             <span style={{ fontWeight: 800, fontSize: 18, color: '#18181b', letterSpacing: '-0.03em' }}>인코딩플러스</span>
-            <span style={{ color: '#2563eb', fontSize: 18, fontWeight: 800 }}>.</span>
+            <span style={{ color: '#2563eb', fontSize: 18, fontWeight: 800 }}>+</span>
           </button>
           <span style={{ fontSize: 11, color: '#1d4ed8', background: '#dbeafe', padding: '3px 8px', borderRadius: 5, fontWeight: 700 }}>관리자</span>
         </header>
@@ -69,7 +69,7 @@ export default function AdminLayout() {
             style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: 6, padding: 0 }}
           >
             <span style={{ fontWeight: 800, fontSize: 21, color: '#18181b', letterSpacing: '-0.03em' }}>인코딩플러스</span>
-            <span style={{ color: '#2563eb', fontSize: 21, fontWeight: 800 }}>.</span>
+            <span style={{ color: '#2563eb', fontSize: 21, fontWeight: 800 }}>+</span>
             <span style={{ fontSize: 11, color: '#1d4ed8', background: '#dbeafe', padding: '3px 8px', borderRadius: 5, fontWeight: 700, marginLeft: 2 }}>관리자</span>
           </button>
 
