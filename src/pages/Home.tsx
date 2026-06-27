@@ -350,7 +350,42 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ══ SECTION 5: 상담 CTA + 푸터 ══ */}
+      {/* ══ SECTION 5: 설명회 ══ */}
+      <div style={{ background: '#eff6ff', padding: '52px 0' }}>
+        <div className="md:max-w-[1100px] md:mx-auto" style={{ padding: '0 18px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 18 }}>
+            <div>
+              <div style={{ width: 28, height: 3, background: '#2563eb', borderRadius: 999, marginBottom: 10 }} />
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#2563eb', letterSpacing: '0.1em', marginBottom: 4 }}>OPEN HOUSE</div>
+              <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#18181b' }}>설명회</div>
+            </div>
+          </div>
+          <div
+            className="hover-card"
+            style={{ background: '#fff', border: '1px solid #c8d0dc', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,55,112,0.07)', cursor: 'pointer' }}
+            onClick={() => window.open('https://forms.gle/2XR5ngTSKyENPDdD7', '_blank')}
+          >
+            <div style={{ background: 'linear-gradient(135deg, #1e40af 0%, #2563eb 100%)', padding: '24px 24px 28px' }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.75)', background: 'rgba(255,255,255,0.15)', padding: '4px 10px', borderRadius: 6, letterSpacing: '0.06em' }}>진행 중</span>
+              <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginTop: 10, letterSpacing: '-0.02em' }}>디미고 입시 설명회</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', marginTop: 6, lineHeight: 1.6 }}>
+                디미고 입학 전형 안내, 합격 전략, 수업 커리큘럼을 한 자리에서 확인하세요.
+              </div>
+            </div>
+            <div style={{ padding: '18px 24px', display: 'flex', justifyContent: 'flex-end' }}>
+              <button
+                onClick={e => { e.stopPropagation(); window.open('https://forms.gle/2XR5ngTSKyENPDdD7', '_blank') }}
+                className="hover-btn"
+                style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, padding: '11px 24px', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}
+              >
+                설명회 신청하기 →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══ SECTION 6: 상담 CTA + 푸터 ══ */}
       <div className="dark-cta-bottom" style={{ background: '#18181b', padding: '32px 20px 0', textAlign: 'center' }}>
         <div className="md:max-w-[600px] md:mx-auto">
           <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>지금 바로 수강 신청하세요</div>

@@ -53,20 +53,15 @@ export default function Apply() {
     fetchActiveForm()
   }, [])
 
-  // 신청 확인 섹션 — info 타입 질문만 (PDF 링크 포함)
+  const isEnrollment = !activeForm || activeForm.type === 'enrollment'
+
+  // ── 수강신청 전용 ──
   const confirmSection = activeForm?.sections.find(s => s.title === '신청 확인') ?? null
   const confirmInfos = (confirmSection?.questions ?? []).filter(q => q.type === 'info')
-
-  // 유의사항 섹션 — 제목 '유의사항'인 섹션의 info 타입 질문만 (없으면 하드코딩 NOTICES 사용)
   const noticesSection = activeForm?.sections.find(s => s.title === '유의사항') ?? null
   const formNotices = (noticesSection?.questions ?? []).filter(q => q.type === 'info')
-
-  // 선택된 수업명과 정확히 일치하는 섹션만 사용
-  const courseSection = course
-    ? (activeForm?.sections.find(s => s.title === course) ?? null)
-    : null
+  const courseSection = course ? (activeForm?.sections.find(s => s.title === course) ?? null) : null
   const step3Questions = courseSection?.questions ?? []
-
   const step1CanNext = privacy === '네' && course !== null
   const step2CanNext = noticeChecked
   const step3CanSubmit = !formLoading && activeForm !== null &&
@@ -75,6 +70,37 @@ export default function Apply() {
       if (Array.isArray(val)) return val.length > 0
       return (val || '').trim() !== ''
     })
+
+  // ── 범용 폼 ──
+  const allQuestions = (activeForm?.sections ?? []).flatMap(s => s.questions)
+  const genericCanSubmit = !formLoading && activeForm !== null &&
+    allQuestions.filter(q => q.required && q.type !== 'info').every(q => {
+      const val = answers[q.id]
+      if (Array.isArray(val)) return val.length > 0
+      return (val || '').trim() !== ''
+    })
+
+  const handleGenericSubmit = async () => {
+    setSubmitting(true)
+    try {
+      await addDoc(collection(db, 'submissions'), {
+        submittedAt: serverTimestamp(),
+        status: 'new',
+        formId: activeForm?.id,
+        formTitle: activeForm?.title,
+        detail: Object.fromEntries(
+          allQuestions
+            .filter(q => q.type !== 'info' && answers[q.id] !== undefined)
+            .map(q => [q.label, Array.isArray(answers[q.id]) ? (answers[q.id] as string[]).join(', ') : answers[q.id]])
+        ),
+      })
+      setSubmitted(true)
+    } catch {
+      alert('제출 중 오류가 발생했습니다. 다시 시도해주세요.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   const setAnswer = (id: string, val: string | string[]) =>
     setAnswers(prev => ({ ...prev, [id]: val }))
@@ -237,7 +263,8 @@ export default function Apply() {
     <>
       <div className="md:max-w-[680px] md:mx-auto md:px-7">
 
-        {/* 스텝 인디케이터 */}
+        {/* 스텝 인디케이터 - 수강신청 전용 */}
+        {isEnrollment && (
         <div className="step-indicator" style={{ padding: '20px 18px 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
             {[{ n: 1, label: '신청 확인' }, { n: 2, label: '유의사항' }, { n: 3, label: '정보 입력' }].map(({ n, label }, i) => (
@@ -263,11 +290,12 @@ export default function Apply() {
             ))}
           </div>
         </div>
+        )}
 
         <div style={{ padding: '20px 18px 24px' }}>
 
           {/* ── STEP 1: 개인정보 + 수업 선택 ── */}
-          {step === 1 && (
+          {isEnrollment && step === 1 && (
             <div>
               <div style={{ fontSize: 18, fontWeight: 800, color: '#18181b', marginBottom: 20 }}>신청 전 확인</div>
 
@@ -343,7 +371,7 @@ export default function Apply() {
           )}
 
           {/* ── STEP 2: 유의사항 ── */}
-          {step === 2 && (
+          {isEnrollment && step === 2 && (
             <div>
               <div style={{ fontSize: 18, fontWeight: 800, color: '#18181b', marginBottom: 20 }}>유의사항 확인</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
@@ -395,7 +423,7 @@ export default function Apply() {
           )}
 
           {/* ── STEP 3: 수업별 정보 입력 ── */}
-          {step === 3 && (
+          {isEnrollment && step === 3 && (
             <div>
               <div style={{ marginBottom: 16 }}>
                 <div style={{ fontSize: 18, fontWeight: 800, color: '#18181b' }}>정보 입력</div>
@@ -437,9 +465,50 @@ export default function Apply() {
             </div>
           )}
 
+          {/* ── 범용 폼 ── */}
+          {!isEnrollment && (
+            <div>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#18181b', marginBottom: 20 }}>
+                {activeForm?.title ?? '신청하기'}
+              </div>
+
+              {formLoading && (
+                <div style={{ padding: '40px 0', textAlign: 'center', color: '#8c959f', fontSize: 14 }}>불러오는 중...</div>
+              )}
+
+              {!formLoading && !activeForm && (
+                <div style={{ padding: '40px 20px', textAlign: 'center', background: '#fff', borderRadius: 14, border: '1px solid #c8d0dc' }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#18181b', marginBottom: 8 }}>신청폼 준비 중입니다</div>
+                  <div style={{ fontSize: 13, color: '#71717a' }}>곧 오픈될 예정입니다. 문의: 010-2838-2391</div>
+                </div>
+              )}
+
+              {!formLoading && activeForm && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {(() => {
+                    let qNum = 0
+                    return (activeForm.sections ?? []).map(section => (
+                      <div key={section.title}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#1d4ed8', marginBottom: 8, paddingLeft: 2 }}>{section.title}</div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                          {section.questions.map(q => {
+                            const idx = qNum
+                            if (q.type !== 'info') qNum++
+                            return renderQuestion(q, idx)
+                          })}
+                        </div>
+                      </div>
+                    ))
+                  })()}
+                </div>
+              )}
+            </div>
+          )}
+
         </div>
 
         {/* 하단 버튼 */}
+        {isEnrollment && (
         <div className="apply-btn-area">
           {step > 1 && (
             <button onClick={goPrev}
@@ -472,6 +541,21 @@ export default function Apply() {
             </button>
           )}
         </div>
+        )}
+        {!isEnrollment && (
+        <div className="apply-btn-area">
+          <button onClick={handleGenericSubmit}
+            disabled={!genericCanSubmit || submitting}
+            style={{
+              flex: 1, padding: '14px 0', border: 'none', borderRadius: 11,
+              background: genericCanSubmit && !submitting ? '#2563eb' : '#bfdbfe',
+              color: '#fff', fontSize: 16, fontWeight: 700,
+              cursor: genericCanSubmit && !submitting ? 'pointer' : 'not-allowed',
+            }}>
+            {submitting ? '제출 중...' : '신청하기'}
+          </button>
+        </div>
+        )}
 
       </div>
 
