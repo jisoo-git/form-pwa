@@ -108,7 +108,7 @@ export default function BottomNav() {
                 onClick={() => { setShowSheet(false); navigate('/apply?type=seminar') }}
                 style={{
                   width: '100%', padding: '16px', borderRadius: 12,
-                  background: '#eff6ff', border: '1px solid #bfdbfe', color: '#1d4ed8',
+                  background: '#f4f4f6', border: 'none', color: '#52525b',
                   fontSize: 15, fontWeight: 700, cursor: 'pointer',
                   textAlign: 'left',
                 }}
