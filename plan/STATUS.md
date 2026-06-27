@@ -1,4 +1,4 @@
-# 인코딩플러스 작업 현황 (2026-06-27 v4)
+# 인코딩플러스 작업 현황 (2026-06-27 v7)
 
 ---
 
@@ -59,16 +59,20 @@
 - [x] 배너 이미지 지원: URL 입력 → 전체 배경 이미지로 렌더링
 - [x] 이미지 설정 시 색상 선택 비활성화 (opacity 0.4)
 - [x] 미리보기 텍스트/버튼 흰색
+- [x] 링크 "직접 입력" 옵션 추가: 외부 URL(https://) 포함 자유 입력, 기존 외부 URL 배너 자동 인식
 
 ### Home.tsx
 - [x] 배너 이미지 렌더링: image → backgroundImage, 오버레이 강화
 - [x] 배너 CTA 자동 레이블: `CTA_LABELS[b.link] || b.cta`
+- [x] 배너 CTA 외부 URL 분기: `startsWith('http')` → `window.open()`, 내부 경로 → `navigate()`
 - [x] "개설강좌" → "입시 특강" 명칭 변경
 - [x] COURSE 02: "일반전형 특강", 세부항목 순서 변경, "16주" 명시
 - [x] WHY 섹션 리디자인: 구조화된 카드 3개
 - [x] WHY 섹션 배포 환경 수정: `gridAutoRows` 제거 → `alignItems: stretch`
 - [x] 수업 상세 버튼: 텍스트 링크 → `#2563eb` CTA 버튼 스타일
 - [x] 코스 카드 색상: COURSE 01 배경 `#dbeafe` → `#eff6ff`, accent `#2563eb` 통일
+- [x] 설명회(PRESENTATION) 섹션 추가: 입시 특강 카드와 동일 스타일, "진행 중" + "매주 토요일 11시" 뱃지
+- [x] 설명회 버튼 → `/apply?type=seminar` 내부 라우팅 (Google Forms 외부 링크 → 자체 폼으로 전환)
 
 ### Courses.tsx
 - [x] 페이지 헤더 부제 삭제, 전형 안내 블록·섹션 헤더 제거
@@ -85,11 +89,24 @@
 - [x] 디자인 점검: 테두리 `#c8d0dc` 통일, 비활성 버튼 `#bfdbfe`
 - [x] Step1 신청 확인 섹션 info 질문 Firestore에서 렌더링 (PDF 링크 포함), 폴백 유지
 - [x] Step1 개인정보 안내문 별도 info 카드로 분리
+- [x] 범용 폼 지원: `isEnrollment` 분기 — enrollment 외 타입은 섹션별 스텝 렌더링 (섹션 1개 = 스텝 1개)
+- [x] 범용 폼 스텝 인디케이터: 섹션 제목으로 표시, enrollment와 동일한 UI
+- [x] `?type=` URL 파라미터 지원: `type` 있으면 Firestore `type` 필드로 조회, 없으면 `isActive` 폼 (기존 동작 유지)
+- [x] `isEnrollment` 로직: `formType` 명시 시 `activeForm` null이어도 enrollment로 fallback 안 함
+- [x] info 질문 linkText 없을 때 URL 노출 → `'자세히 보기'` 폴백으로 모바일 넘침 해결
+- [x] `handleGenericSubmit`: 이름/연락처/학교 키워드 매칭으로 `name`·`phone`·`school` 필드 추출 저장
+- [x] branching 처리: `__end__` → 진행 차단 + 빨간 안내 메시지, 다른 섹션 ID → 해당 섹션으로 점프
 
 ### AdminSubmissions
 - [x] forms 컬렉션 조회 → questionId:label 매핑 빌드
 - [x] detail: UUID 키 → labelMap 통해 한국어 레이블 치환
 - [x] 상세 응답 그리드 레이아웃: `grid-template-columns: auto 1fr`
+- [x] 범용 폼 대응: `Submission` 인터페이스에 `formTitle?`, `formId?` 추가, `name`·`course`·`school` optional화
+- [x] 목록 카드: `name` 없으면 `formTitle` 폴백, `course`/`school` 조건부 표시
+- [x] 상세 시트: 헤더 `formTitle` 폴백, "신청 수업" → 없으면 "폼 종류"로 라벨 전환
+- [x] 폼별 필터 행: forms 컬렉션에서 제목 목록 로드 → 2개 이상일 때 상단 필터 pills 표시
+- [x] UI/UX 전면 재설계: 요약 블록 카드 제거 → 헤더 우측 인라인 카운트, 상태 탭 언더라인 방식, 목록 row+좌측 컬러 바 (3겹 박스 → 단일 레이어)
+- [x] 상태 변경 버튼: 현재 상태 해당 컬러로 강조
 
 ### enrollmentTemplate.ts / Firestore 폼
 - [x] 4섹션 구조: 신청 확인 / 유의사항 / 입시 단기특강 / 일반전형 특강
@@ -112,9 +129,16 @@
 - [x] `Post`: `pinned?`, `views?`, `published?` 필드 추가
 - [x] `banners`: `image?` 필드 추가
 
+### Firestore 직접 수정
+- [x] 설명회 폼 `type`: `'enrollment'` → `'seminar'` (REST API)
+- [x] 설명회 배너 2개 `link`: `/apply` → `/apply?type=seminar` (REST API)
+
 ### plan / 문서
 - [x] `plan/DESIGN.md` YAML 토큰 + 섹션별 서술 구조로 전면 재작성 (BMW 스타일)
 - [x] `CLAUDE.md` 이미지 관리 규칙, 배포 URL, files 폴더 규칙 반영
+- [x] `CLAUDE.md` 사용자↔관리자 연동 체크리스트 섹션 추가 (배너·폼·신청현황·블로그)
+- [x] `CLAUDE.md` `submissions` 컬렉션 구조 현행화 (enrollment/범용 두 가지)
+- [x] `CLAUDE.md` Apply.tsx 폼 렌더링 구조 섹션 추가 (enrollment 3-step 하드코딩 vs 범용 섹션별 step 지침)
 
 ---
 

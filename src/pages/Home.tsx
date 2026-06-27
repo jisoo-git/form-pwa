@@ -351,7 +351,7 @@ export default function Home() {
       </div>
 
       {/* ══ SECTION 5: 설명회 ══ */}
-      <div style={{ background: '#eff6ff', padding: '52px 0' }}>
+      <div style={{ background: '#fafafa', padding: '52px 0' }}>
         <div className="md:max-w-[1100px] md:mx-auto" style={{ padding: '0 18px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 18 }}>
             <div>
@@ -362,23 +362,35 @@ export default function Home() {
           </div>
           <div
             className="hover-card"
-            style={{ background: '#fff', border: '1px solid #c8d0dc', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,55,112,0.07)', cursor: 'pointer' }}
-            onClick={() => window.open('https://forms.gle/2XR5ngTSKyENPDdD7', '_blank')}
+            onClick={() => navigate('/apply?type=seminar')}
+            style={{
+              background: '#fff', borderRadius: 16, overflow: 'hidden',
+              border: '1px solid #c8d0dc', boxShadow: '0 1px 4px rgba(0,55,112,0.06)', cursor: 'pointer',
+            }}
           >
-            <div style={{ background: 'linear-gradient(135deg, #1e40af 0%, #2563eb 100%)', padding: '24px 24px 28px' }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.75)', background: 'rgba(255,255,255,0.15)', padding: '4px 10px', borderRadius: 6, letterSpacing: '0.06em' }}>진행 중</span>
-              <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginTop: 10, letterSpacing: '-0.02em' }}>디미고 입시 설명회</div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', marginTop: 6, lineHeight: 1.6 }}>
-                디미고 입학 전형 안내, 합격 전략, 수업 커리큘럼을 한 자리에서 확인하세요.
+            <div style={{ background: '#eff6ff', borderBottom: '1px solid #2563eb22', padding: '18px 20px' }}>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#2563eb', background: '#2563eb18', padding: '3px 9px', borderRadius: 6 }}>진행 중</span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#1d4ed8', background: '#dbeafe', padding: '3px 9px', borderRadius: 6 }}>매주 토요일 11시</span>
               </div>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#18181b', marginTop: 8 }}>디미고 입시 설명회</div>
+              <div style={{ fontSize: 12, color: '#52525b', marginTop: 3 }}>입학 전형 안내 · 합격 전략 · 커리큘럼 소개</div>
             </div>
-            <div style={{ padding: '18px 24px', display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ padding: '16px 20px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 7, marginBottom: 16 }}>
+                {['디미고 입학 전형 및 일정 안내', '학과별 소질적성검사 · 면접 전략', '인코딩플러스 수업 커리큘럼 소개'].map(item => (
+                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                    <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#2563eb', flexShrink: 0 }} />
+                    <span style={{ fontSize: 13, color: '#3f3f46', fontWeight: 500 }}>{item}</span>
+                  </div>
+                ))}
+              </div>
               <button
-                onClick={e => { e.stopPropagation(); window.open('https://forms.gle/2XR5ngTSKyENPDdD7', '_blank') }}
+                onClick={e => { e.stopPropagation(); navigate('/apply?type=seminar') }}
                 className="hover-btn"
-                style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, padding: '11px 24px', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}
+                style={{ width: '100%', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, padding: '12px 0', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}
               >
-                설명회 신청하기 →
+                설명회 신청하기
               </button>
             </div>
           </div>

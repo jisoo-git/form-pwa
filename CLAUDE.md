@@ -134,7 +134,7 @@ onBlur → borderColor #c8d0dc
 |--------|---------|
 | `banners` | `{ badge, title, sub, bg, image?, cta, link, order }` |
 | `blogPosts` | `{ tag, title, excerpt, coverImage, content: string, date, read, pinned?, published?, views? }` |
-| `submissions` | `{ name, course, school, phone, status, submittedAt, detail }` |
+| `submissions` | enrollment: `{ name, course, school, phone, formId, status, submittedAt, detail }` / 범용: `{ formId, formTitle, status, submittedAt, detail }` |
 | `forms` | `{ title, description, type, isActive, sections: Section[] }` |
 
 `banners.image`: 배경 이미지 URL (없으면 `bg` 그라데이션 사용)  
@@ -179,6 +179,47 @@ onBlur → borderColor #c8d0dc
 - 카드: 대표 이미지(150px) + `#태그` + 제목 + 요약 + 날짜
 - 상세: 대표 이미지(210px, border-radius 14) + 해시태그 pill (border-radius 999px) + 본문 블록
 - **하단 CTA**: 밝은 카드 스타일 ("우리 아이 입시가 고민되시나요?") — 다크 스타일 사용 금지
+
+---
+
+## Apply.tsx 폼 렌더링 구조
+
+Apply.tsx는 `?type=` URL 파라미터와 Firestore `forms.type` 필드로 어떤 폼을 보여줄지 결정한다.
+
+| 조건 | `isEnrollment` | 렌더 방식 |
+|------|---------------|----------|
+| `?type=` 없음, `isActive` 폼의 type이 enrollment | `true` | 3-step 하드코딩 (신청확인 → 유의사항 → 정보입력) |
+| `?type=enrollment` | `true` | 동일 |
+| `?type=seminar` 등 enrollment 아닌 타입 | `false` | **섹션별 step** — 섹션 하나 = 스텝 하나, 스텝 인디케이터에 섹션 제목 표시 |
+
+**enrollment 3-step 하드코딩 규칙**:
+- Step 1: 개인정보 동의(하드코딩) + 수업 선택(하드코딩 COURSE_OPTIONS) + 신청 확인 섹션 info 질문
+- Step 2: 유의사항 섹션 info 질문 + 확인 체크박스
+- Step 3: 선택한 수업명과 일치하는 섹션 질문들
+- 섹션 제목 매칭: `유의사항` / `입시 단기특강` / `일반전형 특강` 정확히 일치 필수
+
+**범용 폼(enrollment 외) 규칙**:
+- 섹션 순서대로 1섹션 = 1스텝
+- 스텝 인디케이터: 섹션 제목 표시
+- 현재 스텝 필수 항목 완료 시 다음 버튼 활성화
+- 마지막 스텝에서 전체 필수 항목 완료 시 신청하기 활성화
+- Firestore 저장: `{ formId, formTitle, status, submittedAt, detail: {레이블: 값} }`
+
+---
+
+## 사용자 ↔ 관리자 연동 체크리스트
+
+> 아래 기능은 사용자 페이지와 관리자 페이지가 **같은 Firestore 데이터를 공유**한다.
+> 한쪽을 수정하면 반드시 다른 쪽도 영향 여부를 확인할 것.
+
+| 기능 | 사용자 페이지 | 관리자 페이지 | 연동 포인트 |
+|------|-------------|-------------|------------|
+| 배너 | `Home.tsx` (히어로 슬라이더) | `AdminBanners.tsx` | `banners` 컬렉션, `link` 필드 라우팅 방식 |
+| 신청 폼 | `Apply.tsx` (`?type=` 파라미터로 폼 선택) | `AdminFormList.tsx` / `FormBuilder.tsx` | `forms` 컬렉션, `type`·`isActive` 필드 |
+| 신청 현황 | `Apply.tsx` (제출 필드 구조) | `AdminSubmissions.tsx` (목록·상세 렌더) | `submissions` 컬렉션 필드 구조 |
+| 블로그 | `Blog.tsx` / `BlogPost.tsx` | `AdminBlogList.tsx` / `AdminBlogWrite.tsx` | `blogPosts` 컬렉션, `published`·`pinned` 필드 |
+
+**규칙**: 위 기능 중 하나를 수정할 때 — 필드 추가/삭제, 저장 구조 변경, 링크 방식 변경 — 짝이 되는 페이지도 함께 검토하고 필요하면 수정한다.
 
 ---
 

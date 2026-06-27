@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { collection, addDoc, getDocs, serverTimestamp, query, where } from 'firebase/firestore'
 import { db } from '../firebase/config'
 import type { Form, Question } from '../types'
@@ -29,6 +29,8 @@ function findAnswer(questions: Question[], keyword: string, answers: Record<stri
 
 export default function Apply() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const formType = searchParams.get('type')
   const [step, setStep] = useState(1)
   const [privacy, setPrivacy] = useState<string | null>(null)
   const [course, setCourse] = useState<string | null>(null)
@@ -42,7 +44,10 @@ export default function Apply() {
   useEffect(() => {
     async function fetchActiveForm() {
       try {
-        const snap = await getDocs(query(collection(db, 'forms'), where('isActive', '==', true)))
+        const q = formType
+          ? query(collection(db, 'forms'), where('type', '==', formType))
+          : query(collection(db, 'forms'), where('isActive', '==', true))
+        const snap = await getDocs(q)
         if (!snap.empty) {
           const d = snap.docs[0]
           setActiveForm({ id: d.id, ...(d.data() as Omit<Form, 'id'>) })
@@ -51,9 +56,12 @@ export default function Apply() {
       finally { setFormLoading(false) }
     }
     fetchActiveForm()
-  }, [])
+  }, [formType])
 
-  const isEnrollment = !activeForm || activeForm.type === 'enrollment'
+  // formType 파라미터가 명시된 경우 해당 타입 폼만 판별, 없으면 enrollment 기본
+  const isEnrollment = formType
+    ? activeForm?.type === 'enrollment'
+    : !activeForm || activeForm.type === 'enrollment'
 
   // ── 수강신청 전용 ──
   const confirmSection = activeForm?.sections.find(s => s.title === '신청 확인') ?? null
@@ -71,8 +79,42 @@ export default function Apply() {
       return (val || '').trim() !== ''
     })
 
-  // ── 범용 폼 ──
-  const allQuestions = (activeForm?.sections ?? []).flatMap(s => s.questions)
+  // ── 범용 폼 (섹션 = 1스텝) ──
+  const [genericStep, setGenericStep] = useState(0)
+  const genericSections = activeForm?.sections ?? []
+  const currentGenericSection = genericSections[genericStep]
+  const currentGenericQuestions = currentGenericSection?.questions ?? []
+  const isLastGenericStep = genericStep === genericSections.length - 1
+
+  // 현재 섹션 질문 중 __end__ branching이 트리거된 경우 진행 차단
+  const blockedQuestion = currentGenericQuestions.find(q => {
+    if (!q.branching) return false
+    const ans = answers[q.id] as string
+    return !!ans && q.branching[ans] === '__end__'
+  }) ?? null
+
+  // branching으로 이동할 다음 섹션 인덱스 (없으면 +1)
+  const getNextSectionIndex = () => {
+    for (const q of currentGenericQuestions) {
+      if (!q.branching) continue
+      const ans = answers[q.id] as string
+      const target = ans && q.branching[ans]
+      if (target && target !== '__end__') {
+        const idx = genericSections.findIndex(s => s.id === target)
+        if (idx !== -1) return idx
+      }
+    }
+    return genericStep + 1
+  }
+
+  const currentStepCanNext = !blockedQuestion && !formLoading && activeForm !== null &&
+    currentGenericQuestions.filter(q => q.required && q.type !== 'info').every(q => {
+      const val = answers[q.id]
+      if (Array.isArray(val)) return val.length > 0
+      return (val || '').trim() !== ''
+    })
+
+  const allQuestions = genericSections.flatMap(s => s.questions)
   const genericCanSubmit = !formLoading && activeForm !== null &&
     allQuestions.filter(q => q.required && q.type !== 'info').every(q => {
       const val = answers[q.id]
@@ -83,7 +125,19 @@ export default function Apply() {
   const handleGenericSubmit = async () => {
     setSubmitting(true)
     try {
+      // 폼 질문 레이블에서 이름·연락처·학교 키워드로 주요 필드 추출
+      const extract = (keywords: string[]) => {
+        const q = allQuestions.find(q => keywords.some(k => q.label.includes(k)))
+        return q ? ((answers[q.id] as string) || '') : ''
+      }
+      const name  = extract(['이름', '성명'])
+      const phone = extract(['연락처', '전화번호', '전화'])
+      const school = extract(['학교'])
+
       await addDoc(collection(db, 'submissions'), {
+        ...(name   && { name }),
+        ...(phone  && { phone }),
+        ...(school && { school }),
         submittedAt: serverTimestamp(),
         status: 'new',
         formId: activeForm?.id,
@@ -151,7 +205,7 @@ export default function Apply() {
           {q.linkUrl && (
             <a href={q.linkUrl} target="_blank" rel="noreferrer"
               style={{ display: 'inline-block', marginTop: 10, fontSize: 13, color: '#2563eb', fontWeight: 600, textDecoration: 'underline' }}>
-              {q.linkText || q.linkUrl}
+              {q.linkText || '자세히 보기'}
             </a>
           )}
         </div>
@@ -266,6 +320,7 @@ export default function Apply() {
         {/* 스텝 인디케이터 - 수강신청 전용 */}
         {isEnrollment && (
         <div className="step-indicator" style={{ padding: '20px 18px 0' }}>
+
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
             {[{ n: 1, label: '신청 확인' }, { n: 2, label: '유의사항' }, { n: 3, label: '정보 입력' }].map(({ n, label }, i) => (
               <div key={n} style={{ display: 'flex', alignItems: 'center', flex: i < 2 ? 1 : 'none' }}>
@@ -292,6 +347,35 @@ export default function Apply() {
         </div>
         )}
 
+        {/* 스텝 인디케이터 - 범용 폼 전용 */}
+        {!isEnrollment && !formLoading && activeForm && genericSections.length > 1 && (
+        <div className="step-indicator" style={{ padding: '20px 18px 0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+            {genericSections.map((section, i) => (
+              <div key={section.title} style={{ display: 'flex', alignItems: 'center', flex: i < genericSections.length - 1 ? 1 : 'none' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: '50%',
+                    background: genericStep >= i ? '#2563eb' : '#d4d9e0',
+                    border: genericStep === i ? '2px solid #1d4ed8' : 'none',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 12, fontWeight: 700,
+                    color: genericStep >= i ? '#fff' : '#a1a1aa',
+                    boxShadow: genericStep === i ? '0 0 0 3px #93c5fd' : 'none',
+                  }}>
+                    {genericStep > i ? '✓' : i + 1}
+                  </div>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: genericStep >= i ? '#1d4ed8' : '#a1a1aa', whiteSpace: 'nowrap' }}>{section.title}</span>
+                </div>
+                {i < genericSections.length - 1 && (
+                  <div style={{ flex: 1, height: 2, background: genericStep > i ? '#2563eb' : '#d4d9e0', margin: '0 6px', marginBottom: 18 }} />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        )}
+
         <div style={{ padding: '20px 18px 24px' }}>
 
           {/* ── STEP 1: 개인정보 + 수업 선택 ── */}
@@ -306,7 +390,7 @@ export default function Apply() {
                       {q.linkUrl && (
                         <a href={q.linkUrl} target="_blank" rel="noreferrer"
                           style={{ display: 'inline-block', marginTop: 10, fontSize: 13, color: '#2563eb', fontWeight: 600, textDecoration: 'underline' }}>
-                          {q.linkText || q.linkUrl}
+                          {q.linkText || '자세히 보기'}
                         </a>
                       )}
                     </div>
@@ -465,11 +549,11 @@ export default function Apply() {
             </div>
           )}
 
-          {/* ── 범용 폼 ── */}
+          {/* ── 범용 폼 (섹션별 스텝) ── */}
           {!isEnrollment && (
             <div>
               <div style={{ fontSize: 18, fontWeight: 800, color: '#18181b', marginBottom: 20 }}>
-                {activeForm?.title ?? '신청하기'}
+                {currentGenericSection?.title ?? activeForm?.title ?? '신청하기'}
               </div>
 
               {formLoading && (
@@ -483,22 +567,26 @@ export default function Apply() {
                 </div>
               )}
 
+              {/* 진행 불가 메시지 */}
+              {blockedQuestion && (
+                <div style={{ margin: '8px 0 4px', padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, fontSize: 13, color: '#dc2626', fontWeight: 600 }}>
+                  선택하신 항목으로는 신청이 불가합니다.
+                </div>
+              )}
+
               {!formLoading && activeForm && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {(() => {
+                    // 이전 섹션 질문 수만큼 qNum 오프셋
                     let qNum = 0
-                    return (activeForm.sections ?? []).map(section => (
-                      <div key={section.title}>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: '#1d4ed8', marginBottom: 8, paddingLeft: 2 }}>{section.title}</div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                          {section.questions.map(q => {
-                            const idx = qNum
-                            if (q.type !== 'info') qNum++
-                            return renderQuestion(q, idx)
-                          })}
-                        </div>
-                      </div>
-                    ))
+                    for (let i = 0; i < genericStep; i++) {
+                      genericSections[i].questions.forEach(q => { if (q.type !== 'info') qNum++ })
+                    }
+                    return currentGenericQuestions.map(q => {
+                      const idx = qNum
+                      if (q.type !== 'info') qNum++
+                      return renderQuestion(q, idx)
+                    })
                   })()}
                 </div>
               )}
@@ -542,18 +630,38 @@ export default function Apply() {
           )}
         </div>
         )}
-        {!isEnrollment && (
+        {!isEnrollment && activeForm && (
         <div className="apply-btn-area">
-          <button onClick={handleGenericSubmit}
-            disabled={!genericCanSubmit || submitting}
-            style={{
-              flex: 1, padding: '14px 0', border: 'none', borderRadius: 11,
-              background: genericCanSubmit && !submitting ? '#2563eb' : '#bfdbfe',
-              color: '#fff', fontSize: 16, fontWeight: 700,
-              cursor: genericCanSubmit && !submitting ? 'pointer' : 'not-allowed',
-            }}>
-            {submitting ? '제출 중...' : '신청하기'}
-          </button>
+          {genericStep > 0 && (
+            <button onClick={() => { setGenericStep(s => s - 1); window.scrollTo(0, 0) }}
+              style={{ flex: '0 0 auto', padding: '14px 22px', border: '1px solid #c8d0dc', borderRadius: 11, background: '#fff', fontSize: 15, fontWeight: 600, color: '#52525b' }}>
+              이전
+            </button>
+          )}
+          {!isLastGenericStep && (
+            <button onClick={() => { setGenericStep(getNextSectionIndex()); window.scrollTo(0, 0) }}
+              disabled={!currentStepCanNext}
+              style={{
+                flex: 1, padding: '14px 0', border: 'none', borderRadius: 11,
+                background: currentStepCanNext ? '#2563eb' : '#bfdbfe',
+                color: '#fff', fontSize: 16, fontWeight: 700,
+                cursor: currentStepCanNext ? 'pointer' : 'not-allowed',
+              }}>
+              다음
+            </button>
+          )}
+          {isLastGenericStep && (
+            <button onClick={handleGenericSubmit}
+              disabled={!genericCanSubmit || submitting}
+              style={{
+                flex: 1, padding: '14px 0', border: 'none', borderRadius: 11,
+                background: genericCanSubmit && !submitting ? '#2563eb' : '#bfdbfe',
+                color: '#fff', fontSize: 16, fontWeight: 700,
+                cursor: genericCanSubmit && !submitting ? 'pointer' : 'not-allowed',
+              }}>
+              {submitting ? '제출 중...' : '신청하기'}
+            </button>
+          )}
         </div>
         )}
 
