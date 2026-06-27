@@ -118,6 +118,7 @@
 | `DESIGN.md` | 디자인 지침서 — YAML 토큰 + 컴포넌트·색상·타이포 스펙 (BMW 스타일) |
 | `specs/COURSES_SPEC.md` | 수업소개 페이지 상세 스펙 (수업 데이터 단일 출처) |
 | `specs/BLOG_SPEC.md` | 블로그 페이지 상세 스펙 |
+| `BANNER_IMAGE_PROMPT.md` | 홍보 배너 이미지 AI 생성 프롬프트 가이드 — 구도 규칙·주제별 프롬프트·등록 방법 |
 | `redesign/인코딩플러스.dc.html` | **디자인 목업 원본** — 모든 페이지의 참고 기준 |
 
 ---
