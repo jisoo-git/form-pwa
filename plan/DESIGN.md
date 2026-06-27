@@ -1,6 +1,6 @@
 ---
 version: 1.0
-name: encodingplus-design
+name: incodingplus-design
 description: 디미고·특성화고 입시 전문 학원 인코딩플러스의 홍보 웹사이트. 학부모·학생을 주 대상으로 하는 신뢰감 있는 교육 브랜드 인터페이스. 연파란 body 배경 위에 흰 카드가 부유하고, 파란색 단일 계열(#2563eb 기준)이 모든 강조·CTA를 담당한다. Pretendard 800·700이 제목과 버튼을 잡고 400·500이 본문을 받친다. 수업소개·수강신청·블로그·홈 4개 섹션으로 구성된 단일 페이지 앱.
 
 colors:

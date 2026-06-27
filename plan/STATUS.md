@@ -9,6 +9,7 @@
 - **수업소개**: CourseFullCard 전면 표시 (바텀시트 제거)
 - **수강신청**: enrollment 3-step 하드코딩 / 범용 폼 섹션별 step, branching(`__end__` 차단·섹션 점프), 제출 저장
 - **블로그**: 핀 고정글 상단 분리, 카드 그리드, 마크다운 상세, 조회수 카운트
+- **BottomNav 신청 탭**: 탭 클릭 시 선택 시트 — 수강신청 / 설명회 신청 분기
 
 ### 관리자 페이지
 - **신청현황**: 상태 관리(새신청/확인완료/상담완료), 폼별 필터 pill, 상태 탭 건수, 상세 시트(전화번호·응답 그리드)
@@ -36,7 +37,7 @@
 - 디자인 가이드: `plan/DESIGN.md`
 - 파일 지도: `plan/PROJECT_MAP.md`
 - 페이지 스펙: `plan/specs/`
-- GitHub: `https://github.com/jisoo-git/encodingplus`
-- 배포 URL: `https://encodingplus.vercel.app/`
+- GitHub: `https://github.com/archers7727/incodingplushome`
+- 배포 URL: TBD (선생님 Vercel 연결 후 업데이트)
 - Firebase 설정: `src/firebase/config.ts`
 - Firestore 폼 재생성 스크립트: `scripts/resetEnrollmentForm.mjs`
