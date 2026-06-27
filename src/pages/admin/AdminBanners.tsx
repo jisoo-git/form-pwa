@@ -9,10 +9,11 @@ interface Banner {
   id: string
   image: string
   link: string
+  cta: string
   order: number
 }
 
-const EMPTY_FORM = { image: '', link: '/apply' }
+const EMPTY_FORM = { image: '', link: '/apply', cta: '' }
 
 const LINK_OPTIONS = [
   { value: '/apply',   label: '수강 신청 (/apply)' },
@@ -46,18 +47,18 @@ export default function AdminBanners() {
   useEffect(() => { fetchBanners() }, [])
 
   function openAdd() { setForm(EMPTY_FORM); setSheet('add') }
-  function openEdit(b: Banner) { setForm({ image: b.image, link: b.link }); setSheet(b) }
+  function openEdit(b: Banner) { setForm({ image: b.image, link: b.link, cta: b.cta ?? '' }); setSheet(b) }
 
   async function handleSave() {
     if (!form.image.trim()) return alert('이미지 URL을 입력해주세요.')
     if (!form.link.trim()) return alert('링크를 입력해주세요.')
     setSaving(true)
     try {
-      const data = { image: form.image, link: form.link, badge: '', title: '', sub: '', bg: '', cta: '' }
+      const data = { image: form.image, link: form.link, cta: form.cta, badge: '', title: '', sub: '', bg: '' }
       if (sheet === 'add') {
         const nextOrder = banners.length > 0 ? Math.max(...banners.map(b => b.order)) + 1 : 0
         const ref = await addDoc(collection(db, 'banners'), { ...data, order: nextOrder })
-        setBanners(prev => [...prev, { id: ref.id, image: form.image, link: form.link, order: nextOrder }])
+        setBanners(prev => [...prev, { id: ref.id, image: form.image, link: form.link, cta: form.cta, order: nextOrder }])
       } else if (sheet && typeof sheet === 'object') {
         await updateDoc(doc(db, 'banners', sheet.id), data)
         setBanners(prev => prev.map(b => b.id === (sheet as Banner).id ? { ...b, ...form } : b))
@@ -236,6 +237,20 @@ export default function AdminBanners() {
                       이미지 제거
                     </button>
                   )}
+                </div>
+
+                {/* 버튼 텍스트 */}
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#52525b', marginBottom: 4 }}>버튼 텍스트</div>
+                  <div style={{ fontSize: 11, color: '#8c959f', marginBottom: 8 }}>입력하면 배너 우상단에 버튼이 표시됩니다. 비워두면 버튼 없음.</div>
+                  <input
+                    value={form.cta}
+                    onChange={e => setForm(f => ({ ...f, cta: e.target.value }))}
+                    placeholder="예: 수강신청, 자세히 보기, 상담 문의"
+                    style={{ width: '100%', border: '1px solid #c8d0dc', borderRadius: 10, padding: '11px 14px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+                    onFocus={e => { e.target.style.borderColor = '#2563eb' }}
+                    onBlur={e => { e.target.style.borderColor = '#c8d0dc' }}
+                  />
                 </div>
 
                 {/* 클릭 링크 */}

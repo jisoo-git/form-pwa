@@ -6,22 +6,43 @@
 
 ### 사용자 페이지
 - **홈**: 배너 슬라이더(Firestore/fallback), Stats(디미고 강조), WHY, 입시특강 2종 프리뷰, 설명회 섹션, 하단 CTA(DarkCTAFooter 공통 컴포넌트)
-- **수업소개**: CourseFullCard 전면 표시(카드 높이 통일), 하단 CTA(DarkCTAFooter 공통 컴포넌트)
+  - 배너 슬라이더: **이미지 전용** (텍스트 오버레이 제거, `<img>` 태그 방식)
+  - 우상단 CTA 버튼: `b.cta` 텍스트가 있을 때만 표시, 클릭 시 `b.link`로 이동
+    - 흰 배경 + 검정 텍스트 + 그림자, 반응형 크기 (`banner-cta-btn` 클래스)
+    - 관리자 배너 편집에서 버튼 텍스트 직접 입력, 비워두면 버튼 없음
+  - 우하단: ‹ › 슬라이드 이동 버튼, 하단 도트 인디케이터
+  - FALLBACK_BANNERS: `/banners/banner1~5.png` 참조
+- **수업소개**: CourseFullCard 전면 표시, 카드 높이 행별 통일(flex stretch), 하단 CTA(DarkCTAFooter)
 - **수강신청**: enrollment 3-step 하드코딩 / 범용 폼 섹션별 step, branching(`__end__` 차단·섹션 점프), 제출 저장
-- **블로그**: 핀 고정글 상단 분리, 카드 그리드, 마크다운 상세, 조회수 카운트
+- **블로그**: 핀 고정글 상단 분리, 카드 그리드(`gridAutoRows: 1fr`), 마크다운 상세, 조회수 카운트, 하단 CTA(DarkCTAFooter)
 - **BottomNav 신청 탭**: 탭 클릭 시 선택 시트 — 수강신청 / 설명회 신청 분기
+- **Drawer**: 카카오채널상담 링크 추가
+
+### 공통 컴포넌트
+- **DarkCTAFooter** (`src/components/DarkCTAFooter.tsx`): 홈·수업소개·블로그 하단 공유
+  - 전화상담 링크(위) + [수강 신청하기 파란버튼] + [카카오 채널 상담 노란버튼] 나란히
+  - `dark-cta-bottom` 클래스로 BottomNav safe-area 패딩 처리
 
 ### 관리자 페이지
 - **신청현황**: 상태 관리(새신청/확인완료/상담완료), 폼별 필터 pill, 상태 탭 건수, 상세 시트(전화번호·응답 그리드)
 - **폼편집**: FormBuilder CRUD, DnD 순서, 질문 타입 12종
-- **홍보배너**: CRUD, 순서 변경, 그라데이션 프리셋 8개 / 이미지 배경, 링크 직접입력
+- **홍보배너**: CRUD, 순서 변경(dirty state), **이미지 전용 UI** (이미지 URL + 16:9 미리보기 + 버튼 텍스트 + 링크 선택)
+  - 저장 필드: `{ image, link, cta, badge:'', title:'', sub:'', bg:'' }`
+  - 버튼 텍스트(`cta`) 입력란: 비워두면 배너에 버튼 없음, 입력 시 우상단에 버튼 표시
+  - 배너 등록 방법: `public/banners/파일명.png` 저장 → 관리자 URL 입력
 - **블로그**: 3열 그리드 카드, 마크다운 에디터(작성/미리보기), 초안/발행, 핀 토글
+
+### 배너 이미지 제작
+- AI 생성 가이드: `plan/BANNER_IMAGE_PROMPT.md` (ChatGPT / DALL-E 3, 1792×1024)
+- 색상 옵션 A~H: 사이트 테마 기반 8종 (스카이블루/네이비+스카이/딥네이비/브랜드블루 등)
+- 생성 프롬프트 5종 제공: 디미고 입시 특강 / 합격 실적 / 전형 안내 / 상담 문의 / 커스텀
+- 배너 이미지 위치: `public/banners/banner1~8.png` (커밋 완료)
 
 ### 인프라
 - Firestore 컬렉션: `banners` / `blogPosts` / `submissions` / `forms` 운영 중
 - Firestore 보안 규칙: `/{document=**}` 전체 허용 (개발 단계)
 - 배포: Vercel, main 브랜치 push → 자동 배포
-- 이미지: `public/` 폴더 로컬 저장 + Firestore 절대경로 입력 방식
+- 이미지: `public/` 폴더 로컬 저장 + Firestore 절대경로 입력 방식 (`/banners/파일명.png`)
 
 ---
 
@@ -29,6 +50,7 @@
 
 - [ ] **폼 활성화 자동 비활성화**: 한 폼 활성화 시 나머지 자동 비활성화 미구현
 - [ ] **이미지 업로드 UI**: 현재 로컬 `public/` 폴더 + 경로 입력 방식. 관리자 UI 업로드 기능 미구현
+- [ ] **Firestore 구 배너 정리**: 이미지 전용 전환 전 등록된 구 배너(image 필드 없음) 삭제 필요
 
 ---
 

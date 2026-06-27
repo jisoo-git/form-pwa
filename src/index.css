@@ -136,6 +136,18 @@ input, textarea, select {
 }
 
 
+/* 배너 우상단 CTA 버튼 */
+.banner-cta-btn {
+  padding: 9px 18px;
+  font-size: 13px;
+}
+@media (min-width: 900px) {
+  .banner-cta-btn {
+    padding: 13px 28px;
+    font-size: 16px;
+  }
+}
+
 /* 마크다운 렌더링 스타일 */
 .md-preview { color: #3f3f46; font-size: 16px; line-height: 1.8; }
 .md-preview h1 { font-size: 22px; font-weight: 800; color: #18181b; margin: 28px 0 12px; letter-spacing: -0.02em; }
