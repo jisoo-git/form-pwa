@@ -122,7 +122,7 @@ export default function Home() {
                   <div style={{ fontSize: 26, fontWeight: 800, lineHeight: 1.25, letterSpacing: '-0.03em', color: '#fff', marginBottom: 8, whiteSpace: 'pre-line' }}>{b.title}</div>
                   <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', lineHeight: 1.6, whiteSpace: 'pre-line' }}>{b.sub}</div>
                   <button
-                    onClick={() => navigate(b.link)}
+                    onClick={() => b.link.startsWith('http') ? window.open(b.link, '_blank') : navigate(b.link)}
                     className="hover-btn"
                     style={{ marginTop: 16, background: '#fff', color: '#18181b', border: 'none', borderRadius: 9, padding: '10px 18px', fontWeight: 700, fontSize: 13 }}
                   >
