@@ -89,51 +89,33 @@ export default function Home() {
   return (
     <div>
 
-      {/* ══ SECTION 1: 히어로 슬라이더 ══ */}
+      {/* ══ SECTION 1: 히어로 슬라이더 (이미지 전용) ══ */}
       <div style={{ background: '#fff', padding: '16px 16px 0' }}>
         <div className="md:max-w-[1100px] md:mx-auto">
           <div
-            style={{ position: 'relative', height: 264, borderRadius: 18, overflow: 'hidden' }}
+            style={{ position: 'relative', aspectRatio: '16/9', borderRadius: 18, overflow: 'hidden' }}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
             {banners.map((b, i) => (
               <div
                 key={b.id}
+                onClick={() => b.link && (b.link.startsWith('http') ? window.open(b.link, '_blank') : navigate(b.link))}
                 style={{
                   position: 'absolute', inset: 0,
-                  ...(b.image
-                    ? { backgroundImage: `url(${b.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }
-                    : { background: b.bg }
-                  ),
+                  backgroundImage: b.image ? `url(${b.image})` : undefined,
+                  background: b.image ? undefined : b.bg,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
                   opacity: i === slide ? 1 : 0,
                   transition: 'opacity 0.45s ease',
                   pointerEvents: i === slide ? 'auto' : 'none',
+                  cursor: b.link ? 'pointer' : 'default',
                 }}
-              >
-                {/* 텍스트 가독성 오버레이 — 이미지일 때 더 강하게 */}
-                <div style={{
-                  position: 'absolute', inset: 0,
-                  background: b.image
-                    ? 'linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 100%)'
-                    : 'linear-gradient(to right, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.08) 100%)',
-                }} />
-                <div style={{ position: 'relative', zIndex: 1, padding: '24px 24px 56px', height: '100%' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.72)', letterSpacing: '0.08em', marginBottom: 10 }}>{b.badge}</div>
-                  <div style={{ fontSize: 26, fontWeight: 800, lineHeight: 1.25, letterSpacing: '-0.03em', color: '#fff', marginBottom: 8, whiteSpace: 'pre-line' }}>{b.title}</div>
-                  <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', lineHeight: 1.6, whiteSpace: 'pre-line' }}>{b.sub}</div>
-                  <button
-                    onClick={() => b.link.startsWith('http') ? window.open(b.link, '_blank') : navigate(b.link)}
-                    className="hover-btn"
-                    style={{ marginTop: 16, background: '#fff', color: '#18181b', border: 'none', borderRadius: 9, padding: '10px 18px', fontWeight: 700, fontSize: 13 }}
-                  >
-                    {b.cta}
-                  </button>
-                </div>
-              </div>
+              />
             ))}
 
-            {/* 화살표 — 둘 다 우하단 */}
+            {/* 화살표 — 우하단 */}
             <button onClick={prev} aria-label="이전 배너" style={{
               position: 'absolute', right: 44, bottom: 14, zIndex: 2,
               background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)',
