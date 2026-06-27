@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { db } from '../firebase/config'
 import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import type { Post } from '../types'
+import DarkCTAFooter from '../components/DarkCTAFooter'
 
 export const FALLBACK_POSTS: Post[] = [
   {
@@ -229,6 +230,7 @@ export default function Blog() {
           )}
         </div>
       </div>
+      <DarkCTAFooter />
     </div>
   )
 }
