@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import DarkCTAFooter from '../components/DarkCTAFooter'
 
 // ── 타입 ─────────────────────────────────────────────────────────
 type Area = { k: string; v: string }
@@ -77,10 +78,10 @@ const SECTIONS: CourseSection[] = [
 // ── CourseFullCard ─────────────────────────────────────────────────
 function CourseFullCard({ course, navigate }: { course: Course; navigate: (p: string) => void }) {
   return (
-    <div style={{ background: '#fff', border: '1px solid #d6dde5', borderRadius: 20, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,55,112,0.08)' }}>
+    <div style={{ background: '#fff', border: '1px solid #d6dde5', borderRadius: 20, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,55,112,0.08)', display: 'flex', flexDirection: 'column', height: '100%' }}>
 
       {/* 상단 — 이름·뱃지·설명 */}
-      <div style={{ padding: '24px 24px 20px' }}>
+      <div style={{ padding: '24px 24px 20px', flex: 1 }}>
         <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 12 }}>
           {course.types.map(t => {
             const s = TYPE_STYLE[t]
@@ -186,7 +187,7 @@ export default function Courses() {
                   📅 {sec.note}
                 </div>
               )}
-              <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 16, alignItems: 'start' }}>
+              <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 16, alignItems: 'stretch' }}>
                 {sec.courses.map(c => (
                   <CourseFullCard key={c.id} course={c} navigate={navigate} />
                 ))}
@@ -197,28 +198,7 @@ export default function Courses() {
         </div>
       </div>
 
-      {/* ── 하단 CTA ── */}
-      <div style={{ background: '#18181b', padding: '32px 20px 0', textAlign: 'center' }}>
-        <div className="md:max-w-[600px] md:mx-auto">
-          <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>지금 바로 수강 신청하세요</div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', marginTop: 6, lineHeight: 1.6 }}>입시 상담 문의 010-2838-2391</div>
-          <div style={{ marginTop: 18, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-            <button
-              onClick={() => navigate('/apply')}
-              className="hover-btn"
-              style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, padding: '12px 40px', fontWeight: 800, fontSize: 15, cursor: 'pointer' }}
-            >
-              수강 신청하기
-            </button>
-            <a href="tel:01028382391" style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
-              전화 상담 010-2838-2391
-            </a>
-          </div>
-          <div style={{ marginTop: 32, paddingTop: 16, paddingBottom: 8, borderTop: '1px solid rgba(255,255,255,0.08)', fontSize: 12, color: '#52525b' }}>
-            인코딩플러스 · 디미고 · 특성화고 입시 전문 · 사업자등록번호 110-96-08049
-          </div>
-        </div>
-      </div>
+      <DarkCTAFooter />
 
     </div>
   )

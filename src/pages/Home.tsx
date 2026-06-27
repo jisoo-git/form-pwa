@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import { db } from '../firebase/config'
+import DarkCTAFooter from '../components/DarkCTAFooter'
 
 interface Banner {
   id: string; badge: string; title: string; sub: string
@@ -17,10 +18,10 @@ const FALLBACK_BANNERS: Banner[] = [
 ]
 
 const STATS = [
-  { num: '212명', label: '9년 누적 합격' },
-  { num: '1위', label: '디미고 합격률 전국' },
-  { num: '37명', label: '2026 디미고' },
-  { num: '9년', label: '입시 전문' },
+  { num: '212명', label: '디미고 9년 누적 합격' },
+  { num: '1위', label: '디미고 합격률 전국 1위' },
+  { num: '37명', label: '2026 디미고 합격' },
+  { num: '9년', label: '디미고 입시 전문' },
 ]
 
 const WHY_CARDS = [
@@ -183,8 +184,8 @@ export default function Home() {
           <div style={{ textAlign: 'center', marginBottom: 20 }}>
             <div style={{ width: 28, height: 3, background: '#2563eb', borderRadius: 999, margin: '0 auto 10px' }} />
             <div style={{ fontSize: 11, fontWeight: 700, color: '#2563eb', letterSpacing: '0.1em', marginBottom: 6 }}>합격 실적</div>
-            <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#18181b', marginBottom: 4 }}>9년간 검증된 합격 실적</div>
-            <div style={{ fontSize: 13, color: '#52525b' }}>매년 디미고 · 특성화고에 합격생을 배출한 입시 전문 학원입니다</div>
+            <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#18181b', marginBottom: 4 }}>9년간 검증된 디미고 합격 실적</div>
+            <div style={{ fontSize: 13, color: '#52525b' }}>매년 디미고에 합격생을 배출한 입시 전문 학원입니다</div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {STATS.map(s => (
@@ -398,27 +399,7 @@ export default function Home() {
       </div>
 
       {/* ══ SECTION 6: 상담 CTA + 푸터 ══ */}
-      <div className="dark-cta-bottom" style={{ background: '#18181b', padding: '32px 20px 0', textAlign: 'center' }}>
-        <div className="md:max-w-[600px] md:mx-auto">
-          <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>지금 바로 수강 신청하세요</div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', marginTop: 6, lineHeight: 1.6 }}>이번주 주말부터 시작합니다 · 선착순 마감</div>
-          <div style={{ marginTop: 18, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-            <button
-              onClick={() => navigate('/apply')}
-              className="hover-btn"
-              style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, padding: '12px 40px', fontWeight: 800, fontSize: 15 }}
-            >
-              수강 신청하기
-            </button>
-            <a href="tel:01028382391" style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
-              전화 상담 010-2838-2391
-            </a>
-          </div>
-          <div style={{ marginTop: 32, paddingTop: 16, paddingBottom: 8, borderTop: '1px solid rgba(255,255,255,0.08)', fontSize: 12, color: '#52525b' }}>
-            인코딩플러스 · 디미고 · 특성화고 입시 전문 · 사업자등록번호 110-96-08049
-          </div>
-        </div>
-      </div>
+      <DarkCTAFooter />
 
     </div>
   )

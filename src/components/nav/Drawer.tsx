@@ -86,9 +86,16 @@ export default function Drawer({ open, onClose }: Props) {
           <div style={{ fontSize: 11, fontWeight: 700, color: '#8c959f', letterSpacing: '0.06em', marginBottom: 6 }}>상담 문의</div>
           <a
             href="tel:01028382391"
-            style={{ fontWeight: 800, fontSize: 20, color: '#2563eb', textDecoration: 'none', display: 'block' }}
+            style={{ fontWeight: 800, fontSize: 20, color: '#2563eb', textDecoration: 'none', display: 'block', marginBottom: 10 }}
           >
             010-2838-2391
+          </a>
+          <a
+            href="https://pf.kakao.com/_RSYxiT"
+            target="_blank" rel="noopener noreferrer"
+            style={{ display: 'inline-block', background: '#FEE500', color: '#18181b', borderRadius: 8, padding: '8px 16px', fontWeight: 700, fontSize: 13, textDecoration: 'none' }}
+          >
+            카카오 채널 상담
           </a>
         </div>
       </div>

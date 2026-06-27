@@ -5,8 +5,8 @@
 ## 현재 구현 상태
 
 ### 사용자 페이지
-- **홈**: 배너 슬라이더(Firestore/fallback), Stats, WHY, 입시특강 2종 프리뷰, 설명회 섹션, CTA
-- **수업소개**: CourseFullCard 전면 표시 (바텀시트 제거)
+- **홈**: 배너 슬라이더(Firestore/fallback), Stats(디미고 강조), WHY, 입시특강 2종 프리뷰, 설명회 섹션, 하단 CTA(DarkCTAFooter 공통 컴포넌트)
+- **수업소개**: CourseFullCard 전면 표시(카드 높이 통일), 하단 CTA(DarkCTAFooter 공통 컴포넌트)
 - **수강신청**: enrollment 3-step 하드코딩 / 범용 폼 섹션별 step, branching(`__end__` 차단·섹션 점프), 제출 저장
 - **블로그**: 핀 고정글 상단 분리, 카드 그리드, 마크다운 상세, 조회수 카운트
 - **BottomNav 신청 탭**: 탭 클릭 시 선택 시트 — 수강신청 / 설명회 신청 분기
