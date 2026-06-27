@@ -104,21 +104,16 @@ export default function Home() {
                 onClick={() => b.link && (b.link.startsWith('http') ? window.open(b.link, '_blank') : navigate(b.link))}
                 style={{
                   position: 'absolute', inset: 0,
-                  background: b.bg || '#001233',
+                  backgroundImage: b.image ? `url(${b.image})` : undefined,
+                  backgroundColor: b.bg || '#001233',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
                   opacity: i === slide ? 1 : 0,
                   transition: 'opacity 0.45s ease',
                   pointerEvents: i === slide ? 'auto' : 'none',
                   cursor: b.link ? 'pointer' : 'default',
                 }}
-              >
-                {b.image && (
-                  <img
-                    src={b.image}
-                    alt=""
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                  />
-                )}
-              </div>
+              />
             ))}
 
             {/* 우상단 CTA 버튼 — b.cta 있을 때만 현재 슬라이드 버튼 표시 */}
