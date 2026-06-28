@@ -14,6 +14,8 @@ import FormBuilder from './pages/admin/FormBuilder'
 import AdminBanners from './pages/admin/AdminBanners'
 import AdminBlogList from './pages/admin/AdminBlogList'
 import AdminBlogWrite from './pages/admin/AdminBlogWrite'
+import AdminLogin from './pages/admin/AdminLogin'
+import ProtectedRoute from './components/ui/ProtectedRoute'
 
 export default function App() {
   return (
@@ -28,8 +30,11 @@ export default function App() {
           <Route path="/blog/:id" element={<BlogPost />} />
         </Route>
 
-        {/* 관리자 라우트 */}
-        <Route element={<AdminLayout />}>
+        {/* 관리자 로그인 */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* 관리자 라우트 (인증 필요) */}
+        <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
           <Route path="/admin" element={<Navigate to="/admin/submissions" replace />} />
           <Route path="/admin/submissions" element={<AdminSubmissions />} />
           <Route path="/admin/builder" element={<AdminFormList />} />

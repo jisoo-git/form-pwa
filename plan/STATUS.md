@@ -1,4 +1,4 @@
-# 인코딩플러스 작업 현황 (2026-06-27)
+# 인코딩플러스 작업 현황 (2026-06-28)
 
 ---
 
@@ -24,6 +24,8 @@
   - `dark-cta-bottom` 클래스로 BottomNav safe-area 패딩 처리
 
 ### 관리자 페이지
+- **인증**: `/admin/login` 페이지 — 비밀번호 입력 후 `localStorage` 세션 유지, `ProtectedRoute`로 전체 admin 라우트 보호
+  - 비밀번호: `.env.local`의 `VITE_ADMIN_PASSWORD` (Vercel 환경변수에도 동일 설정 필요)
 - **신청현황**: 상태 관리(새신청/확인완료/상담완료), 폼별 필터 pill, 상태 탭 건수, 상세 시트(전화번호·응답 그리드)
 - **폼편집**: FormBuilder CRUD, DnD 순서, 질문 타입 12종
 - **홍보배너**: CRUD, 순서 변경(dirty state), **이미지 전용 UI** (이미지 URL + 16:9 미리보기 + 버튼 텍스트 + 링크 선택)
@@ -36,7 +38,7 @@
 - AI 생성 가이드: `plan/BANNER_IMAGE_PROMPT.md` (ChatGPT / DALL-E 3, 1792×1024)
 - 색상 옵션 A~H: 사이트 테마 기반 8종 (스카이블루/네이비+스카이/딥네이비/브랜드블루 등)
 - 생성 프롬프트 5종 제공: 디미고 입시 특강 / 합격 실적 / 전형 안내 / 상담 문의 / 커스텀
-- 배너 이미지 위치: `public/banners/banner1~8.png` (커밋 완료)
+- 배너 이미지 위치: `public/banners/banner1~17.png` (커밋 완료)
 
 ### 인프라
 - Firestore 컬렉션: `banners` / `blogPosts` / `submissions` / `forms` 운영 중

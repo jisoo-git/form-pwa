@@ -9,7 +9,7 @@ export default function AdminLogin() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (isAuthenticated()) navigate('/admin/dashboard', { replace: true })
+    if (isAuthenticated()) navigate('/admin/submissions', { replace: true })
   }, [])
 
   if (isAuthenticated()) return null
@@ -17,7 +17,7 @@ export default function AdminLogin() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     if (login(password)) {
-      navigate('/admin/dashboard', { replace: true })
+      navigate('/admin/submissions', { replace: true })
     } else {
       setError(true)
       setPassword('')
