@@ -9,7 +9,7 @@
 
 | 파일 | 역할 |
 |------|------|
-| `CLAUDE.md` | **운영 규칙 단일 출처** — 기술 스택/배포/Firestore 스키마/연동 체크리스트/자주 실수하는 것. Claude Code 세션마다 자동 로드. |
+| `CLAUDE.md` | **문서 목차(TOC)** — 먼저 볼 문서로 가는 얇은 인덱스. Claude Code 세션마다 자동 로드. 상세 규칙은 각 docs 문서에. |
 | `CONTEXT.md` | **용어 사전(글로서리)** — 배너·폼·수강신청·제출 등 도메인 용어 정의. |
 | `index.html` | Vite 진입점 (PWA manifest, 아이콘 링크) |
 | `vite.config.ts` | Vite 설정 (PWA 플러그인 포함) |
@@ -118,7 +118,11 @@
 | `PROJECT_MAP.md` | **이 파일** — 전체 파일 지도 |
 | `STATUS.md` | 작업 현황 — 완료/미완료 항목 추적 |
 | `adr/` | 결정 기록(ADR) — 왜 그렇게 했는가. `0001-spa-manual-ga-pageview.md` 등 |
+| `DATA-MODEL.md` | Firestore 컬렉션 필드 구조 + 필드 주의사항 |
+| `OPERATIONS.md` | 운영·배포 — 기술 스택·배포·이미지 관리 규칙 |
+| `DEPENDENCY-MAP.md` | 연동 영향범위 — 사용자↔관리자 blast radius |
 | `design/DESIGN.md` | 디자인 지침서 — YAML 토큰 + 컴포넌트·색상·타이포 스펙 (BMW 스타일) |
+| `specs/APPLY_SPEC.md` | 수강신청 렌더링 스펙 (enrollment 3-step·설명회 경로) |
 | `specs/COURSES_SPEC.md` | 수업소개 페이지 상세 스펙 (수업 데이터 단일 출처) |
 | `specs/BLOG_SPEC.md` | 블로그 페이지 상세 스펙 |
 
