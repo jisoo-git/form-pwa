@@ -10,6 +10,7 @@
 | 파일 | 역할 |
 |------|------|
 | `CLAUDE.md` | **운영 규칙 단일 출처** — 기술 스택/배포/Firestore 스키마/연동 체크리스트/자주 실수하는 것. Claude Code 세션마다 자동 로드. |
+| `CONTEXT.md` | **용어 사전(글로서리)** — 배너·폼·수강신청·제출 등 도메인 용어 정의. |
 | `index.html` | Vite 진입점 (PWA manifest, 아이콘 링크) |
 | `vite.config.ts` | Vite 설정 (PWA 플러그인 포함) |
 | `package.json` | 의존성 목록 |
@@ -109,17 +110,27 @@
 
 ---
 
-## plan/
+## docs/  (읽는 문서)
 
 | 경로 | 역할 |
 |------|------|
+| `../CONTEXT.md` | **용어 사전(글로서리)** — 도메인 용어 정의. 루트에 위치 |
 | `PROJECT_MAP.md` | **이 파일** — 전체 파일 지도 |
 | `STATUS.md` | 작업 현황 — 완료/미완료 항목 추적 |
-| `DESIGN.md` | 디자인 지침서 — YAML 토큰 + 컴포넌트·색상·타이포 스펙 (BMW 스타일) |
+| `adr/` | 결정 기록(ADR) — 왜 그렇게 했는가. `0001-spa-manual-ga-pageview.md` 등 |
+| `design/DESIGN.md` | 디자인 지침서 — YAML 토큰 + 컴포넌트·색상·타이포 스펙 (BMW 스타일) |
 | `specs/COURSES_SPEC.md` | 수업소개 페이지 상세 스펙 (수업 데이터 단일 출처) |
 | `specs/BLOG_SPEC.md` | 블로그 페이지 상세 스펙 |
+
+---
+
+## plan/  (작업 자산 — 문서 아님)
+
+| 경로 | 역할 |
+|------|------|
 | `BANNER_IMAGE_PROMPT.md` | 홍보 배너 이미지 AI 생성 프롬프트 가이드 — 구도 규칙·주제별 프롬프트·등록 방법 |
 | `redesign/인코딩플러스.dc.html` | **디자인 목업 원본** — 모든 페이지의 참고 기준 |
+| `redesign/uploads/`, `ex/` | 리디자인 스크린샷·테마 HTML 등 스크래치 자산 |
 
 ---
 

@@ -1,10 +1,12 @@
 # 인코딩플러스 개발 규칙
 
 > Claude Code 세션마다 자동 로드되는 운영 지침. 역할 분리:
-> - 디자인 스펙 → `plan/DESIGN.md`
-> - 파일 지도 → `plan/PROJECT_MAP.md`
-> - 작업 현황 → `plan/STATUS.md`
-> - 페이지별 스펙 → `plan/specs/`
+> - 용어 사전 → `CONTEXT.md` (도메인 용어 글로서리)
+> - 결정 기록 → `docs/adr/` (왜 이렇게 했는가)
+> - 디자인 스펙 → `docs/design/DESIGN.md`
+> - 파일 지도 → `docs/PROJECT_MAP.md`
+> - 작업 현황 → `docs/STATUS.md`
+> - 페이지별 스펙 → `docs/specs/`
 
 ---
 
@@ -12,8 +14,8 @@
 
 **기능 추가·수정 전 반드시 아래 순서로 확인할 것:**
 
-1. `plan/DESIGN.md` — 색상·버튼·컴포넌트·레이아웃 스펙 확인
-2. `plan/specs/` — 해당 페이지 스펙 파일 확인 (있을 경우)
+1. `docs/design/DESIGN.md` — 색상·버튼·컴포넌트·레이아웃 스펙 확인
+2. `docs/specs/` — 해당 페이지 스펙 파일 확인 (있을 경우)
 3. 이 파일 하단 "자주 실수하는 것" 확인
 
 **확인 없이 임의로 색상·스타일·구조를 결정하지 말 것.**
