@@ -12,7 +12,9 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-CD0M92BDB5');
+      // SPA 페이지뷰는 앱에서 라우트 변경마다 수동 전송(src/lib/analytics.ts)하므로
+      // 자동 페이지뷰는 끈다. 중복 집계 방지.
+      gtag('config', 'G-CD0M92BDB5', { send_page_view: false });
     </script>
     <meta name="google-site-verification" content="pVbep1UVSSgB6crk_V9dvX9TZ72XK_Mg8HsqlTIzTS4" />
     <meta name="naver-site-verification" content="c7b7d1346deb0da86b37362a54584720f3a18ddc" />

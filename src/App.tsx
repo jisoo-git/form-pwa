@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import RouteTracker from './components/RouteTracker'
 import UserLayout from './layouts/UserLayout'
 import AdminLayout from './layouts/AdminLayout'
 
@@ -20,6 +21,7 @@ import ProtectedRoute from './components/ui/ProtectedRoute'
 export default function App() {
   return (
     <BrowserRouter>
+      <RouteTracker />
       <Routes>
         {/* 사용자 라우트 */}
         <Route element={<UserLayout />}>
